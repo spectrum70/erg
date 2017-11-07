@@ -1,6 +1,12 @@
 #!/bin/bash
 # Sysam snmdist - CLFS based simple no-mmu rootfs generator
 
+export CLFS=`pwd`
+export PATH="$PATH:${CLFS}/cross-tools/bin"
+export CLFS_HOST=$(echo ${MACHTYPE} | sed "s/-[^-]*/-cross/")
+export CLFS_TARGET="m68k-linux-musl"
+export CLFS_ARCH=m68k
+
 function err {
         echo -e "\x1b[1;31m+++ "$1"\x1b[0m"
         echo -e "\x1b[31;1;5m+++ there are errors !\x1b[0m"
@@ -30,6 +36,38 @@ msg "Copyright (C) 2017 Angelo Dureghello - Sysam"
 msg "Please visit http://www.sysam.it for further details"
 msg "Press enter to start ..."
 read -p ""
+
+msg "Please select a cpu ..."
+echo "1. mcf54415 flat  (-mcpu=54418)"
+echo "2. mcf5475        (-mcpu=5475,-m5200)"
+echo "3. mcf5407        (-mcpu=5407,-m5200)"
+echo "4. mcf5307        (-mcpu=5307,-m5307)"
+echo "5. mcf537x        (-mcpu=537x,-m5200)"
+echo "6. mcf528x        (-mcpu=528x,-m5307)"
+echo "7. mcf5271        (-mcpu=5271,-m5307)"
+echo "8. mcf5272        (-mcpu=5272,-m5307)"
+echo "9. mcf5275        (-mcpu=5275,-m5307)"
+echo "a. mcf523x        (-mcpu=523x,-m5307)"
+echo "b. mcf5253        (-mcpu=5253,-m5200)"
+echo "c. mcf5249        (-mcpu=5249,-m5200)"
+echo "d. mcf5206        (-mcpu=5206,-m5200)"
+echo "e. mcf5206e       (-mcpu=5206e,-m5200)"
+echo "f. mcf520x        (-mcpu=5208,-m5200)"
+
+read -n 1 c
+
+case "$c" in
+	1)
+	clfs_cpu="-mcpu=54418 -Os"
+	;;
+	4)
+	clfs_cpu="-mcpu=5307,-m5307 -Os"
+	;;
+esac
+
+echo -e "\n"
+step "Selecting cpu ... "
+step_done
 
 step "Setting up environment ... "
 source scripts/s0-setup.script
@@ -74,8 +112,9 @@ msg "Target fs created successfully."
 
 step "Configuring and installing busybox ... \n"
 cd sources/busybox-1.24.2/
-make ARCH=m68k menuconfig
-./build-m68k.sh
+make clean
+make ARCH="${CLFS_ARCH}" menuconfig
+make ARCH="${CLFS_ARCH}" CROSS_COMPILE="${CLFS_TARGET}-" CFLAGS="${clfs_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${CLFS}/targetfs" install
 cd -
 step "Configuring and installing busybox ... "
 step_done

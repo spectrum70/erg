@@ -62,6 +62,5 @@ process is very simple.
 \  4. TO DO
  \_____________________ 
 
-- CPU selection
-- package ask to config, ask to build
+- to include packages, or allow to download them
 
