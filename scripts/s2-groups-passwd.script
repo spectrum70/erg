@@ -1,0 +1,12 @@
+# Sysam CLFS
+# *** source this file ***
+
+ln -sf ../proc/mounts ${CLFS}/targetfs/etc/mtab
+cat > ${CLFS}/targetfs/etc/passwd << "EOF"
+root::0:0:root:/root:/bin/ash
+EOF
+
+# The login, agetty, and init programs (and others) use the lastlog file to
+# record information
+touch ${CLFS}/targetfs/var/log/lastlog
+chmod 664 ${CLFS}/targetfs/var/log/lastlog

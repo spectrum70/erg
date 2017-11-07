@@ -1,0 +1,14 @@
+# Sysam CLFS
+# *** source this file ***
+
+sudo cp -a /dev/{null,console} ${CLFS}/targetfs/dev/
+sudo cp -a /dev/ttyS0 ${CLFS}/targetfs/dev/
+sudo cp -a /dev/ttyS1 ${CLFS}/targetfs/dev/
+sudo cp -a /dev/tty1 ${CLFS}/targetfs/dev/
+sudo cp -a /dev/tty2 ${CLFS}/targetfs/dev/
+sudo cp -a /dev/tty3 ${CLFS}/targetfs/dev/
+sudo cp -a /dev/tty4 ${CLFS}/targetfs/dev/
+sudo cp -a /dev/tty5 ${CLFS}/targetfs/dev/
+sudo cp -a /dev/tty6 ${CLFS}/targetfs/dev/
+
+sudo chown root ${CLFS}/targetfs/dev/*

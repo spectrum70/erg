@@ -1,0 +1,4 @@
+# Sysam CLFS
+# *** source this file ***
+
+echo "[stmark2]" > ${CLFS}/targetfs/etc/hostname

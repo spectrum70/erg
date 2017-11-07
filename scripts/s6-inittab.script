@@ -1,0 +1,18 @@
+# Sysam CLFS
+# *** source this file ***
+
+mkdir -p ${CLFS}/targetfs/etc/rc.d
+
+cat >  ${CLFS}/targetfs/etc/rc.d/startup<< "EOF"
+/bin/mount -t proc proc /proc
+/bin/mount -t sysfs sysfs /sys
+cat /etc/motd
+EOF
+
+chmod 755 ${CLFS}/targetfs/etc/rc.d/startup
+
+cat > ${CLFS}/targetfs/etc/inittab<< "EOF"
+# /etc/inittab
+::sysinit:/bin/sh /etc/rc.d/startup
+ttyS0::respawn:-/bin/sh
+EOF

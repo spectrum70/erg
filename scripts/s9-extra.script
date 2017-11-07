@@ -1,0 +1,4 @@
+# Sysam CLFS
+# *** source this file ***
+
+cp extra/motd ${CLFS}/targetfs/etc
