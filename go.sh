@@ -1,11 +1,10 @@
 #!/bin/bash
 # Sysam snmdist - CLFS based simple no-mmu rootfs generator
 
-export CLFS=`pwd`
-export PATH="$PATH:${CLFS}/cross-tools/bin"
-export CLFS_HOST=$(echo ${MACHTYPE} | sed "s/-[^-]*/-cross/")
-export CLFS_TARGET="m68k-linux-musl"
-export CLFS_ARCH=m68k
+# Toolchain setup into scripts s0
+
+export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
+export INITRAMFS="../snmdist/targetfs"
 
 function err {
         echo -e "\x1b[1;31m+++ "$1"\x1b[0m"
@@ -14,11 +13,11 @@ function err {
 }
 
 function inf {
-        echo -e "\x1b[1;34m--- "$1"\x1b[0m"
+        echo -e "\x1b[1;33m--- "$1"\x1b[0m"
 }
 
 function msg {
-        echo -e "\x1b[1;33m--- "$1"\x1b[0m"
+        echo -e "\x1b[1;34m--- "$1"\x1b[0m"
 }
 
 function step {
@@ -58,10 +57,10 @@ read -n 1 c
 
 case "$c" in
 	1)
-	clfs_cpu="-mcpu=54418 -Os"
+	clfs_cpu="-mcpu=54418"
 	;;
 	4)
-	clfs_cpu="-mcpu=5307,-m5307 -Os"
+	clfs_cpu="-mcpu=5307,-m5307"
 	;;
 esac
 
@@ -70,7 +69,7 @@ step "Selecting cpu ... "
 step_done
 
 step "Setting up environment ... "
-source scripts/s0-setup.script
+source scripts/s00-setup.script
 step_done
 
 step "Preparing targetfs tree ... "
@@ -78,55 +77,54 @@ rm -r -f targetfs
 step_done
 
 step "Creating directories ... "
-source scripts/s1-create-dirs.script
+source scripts/s01-create-dirs.script
 step_done
 
 step "Creating users, groups, passwd ... "
-source scripts/s2-groups-passwd.script
+source scripts/s02-groups-passwd.script
 step_done
 
 #-rw-r--r-- 1 angelo angelo  178 nov  5 01:10 s3-inst-libgcc.script
 #-rw-r--r-- 1 angelo angelo 3072 nov  5 10:00 s4-mdev.script
 
 step "Creating profile ... "
-source scripts/s5-profile.script
+source scripts/s05-profile.script
 step_done
 
 step "Creating inittab ... "
-source scripts/s6-inittab.script
+source scripts/s06-inittab.script
 step_done
 
 step "Setting hostname ... "
-source scripts/s7-hostname.script
+source scripts/s07-hostname.script
 step_done
 
 step "Creating devices ... "
-source scripts/s8-devices.script
+source scripts/s08-devices.script
 step_done
 
 step "Copying extra files ... "
-source scripts/s9-extra.script
+source scripts/s09-extra.script
 step_done
 
 msg "Target fs created successfully."
 
-step "Configuring and installing busybox ... \n"
-cd sources/busybox-1.24.2/
+step "Configuring and installing busybox ..."
+cd sources/busybox-1.28.1/
 make clean
 make ARCH="${CLFS_ARCH}" menuconfig
-make ARCH="${CLFS_ARCH}" CROSS_COMPILE="${CLFS_TARGET}-" CFLAGS="${clfs_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${CLFS}/targetfs" install
-cd -
-step "Configuring and installing busybox ... "
+make ARCH="${CLFS_ARCH}" CROSS_COMPILE="${CLFS_CROSS}" EXTRA_CFLAGS="${clfs_cpu}" EXTRA_LDFLAGS="${clfs_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${CLFS}/targetfs" install
+cd ${CLFS}
+
+step "Configuring and installing other tools ..."
+#cd sources/lrzsz-0.12.20
+#make distclean
+#./configure --host=m68k
+#make ARCH="${CLFS_ARCH}" CROSS_COMPILE="${CLFS_CROSS}" EXTRA_CFLAGS="${clfs_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${CLFS}/targetfs" install
+#cd -
 step_done
 
-step "Building Linux and initramfs ... \n"
-cd sources/linux
-./build.sh
-if [ $? == 0 ]; then
-	cp -f uImage ${CLFS}
-fi
-cd -
-step "Building Linux and initramfs ... "
-step_done
+# Kernel time now
+source scripts/s10-kernel.script
 
 msg "All ok, you are done, enjoy."

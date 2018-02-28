@@ -1,0 +1,18 @@
+# Sysam CLFS
+# *** source this file ***
+#
+# Before this step, toolchain has been created by ng-crosstool and copied here.
+# This since we use uclibc-ng (musl not supported from clfs).
+
+unset CFLAGS
+
+# Host information
+export CLFS=`pwd`
+export CLFS_HOST=$(echo ${MACHTYPE} | sed "s/-[^-]*/-cross/")
+
+# Architecture
+export CLFS_ARCH=m68k
+
+# Toolchain setup, toolchain is in cross-tools subfolder
+export CLFS_CROSS=/opt/toolchains/m68k/gcc-5.3.0-uclinux/bin/m68k-uclinux-
+
