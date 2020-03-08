@@ -20,7 +20,7 @@ if [ "${INITRAMFS}" != "" ]; then
 fi
 
 step "Building kernel ..."
-make ARCH=${CLFS_ARCH} CROSS_COMPILE=${LINUX_CROSS} KALLSYMS_EXTRA_PASS=1 LOADADDR=40001000 zImage &>/dev/null
+make ARCH=${CLFS_ARCH} CROSS_COMPILE=${LINUX_CROSS} KALLSYMS_EXTRA_PASS=1 LOADADDR=40001000 zImage
 step_done
 step "Preparting U-Boot image ..."
 ${LINUX_CROSS}objcopy -O binary vmlinux linux.bin &>/dev/null

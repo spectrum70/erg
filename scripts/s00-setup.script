@@ -14,4 +14,4 @@ export CLFS_HOST=$(echo ${MACHTYPE} | sed "s/-[^-]*/-cross/")
 export CLFS_ARCH=m68k
 
 # Toolchain setup, toolchain is in cross-tools subfolder
-export CLFS_CROSS=/opt/toolchains/m68k/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-
+export CLFS_CROSS=/media/ssd_a/opt/toolchains/m68k/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-

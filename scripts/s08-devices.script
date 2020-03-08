@@ -10,5 +10,24 @@ sudo cp -a /dev/tty3 ${CLFS}/targetfs/dev/
 sudo cp -a /dev/tty4 ${CLFS}/targetfs/dev/
 sudo cp -a /dev/tty5 ${CLFS}/targetfs/dev/
 sudo cp -a /dev/tty6 ${CLFS}/targetfs/dev/
+sudo mknod ${CLFS}/targetfs/dev/mtdblock0 b 31 0
+sudo mknod ${CLFS}/targetfs/dev/mtdblock1 b 31 1
+sudo mknod ${CLFS}/targetfs/dev/mtdblock2 b 31 2
+sudo mknod ${CLFS}/targetfs/dev/mtdblock3 b 31 3
+sudo mknod ${CLFS}/targetfs/dev/mtd0 c 90 0
+sudo mknod ${CLFS}/targetfs/dev/mtd1 c 90 2
+sudo mknod ${CLFS}/targetfs/dev/mtd2 c 90 4
+sudo mknod ${CLFS}/targetfs/dev/mtd3 c 90 6
+sudo mknod ${CLFS}/targetfs/dev/ram0 b 1 1
+sudo mknod ${CLFS}/targetfs/dev/mmcblk0 b 179 0
+sudo mknod ${CLFS}/targetfs/dev/mmcblk0p1 b 179 1
+sudo mknod ${CLFS}/targetfs/dev/mmcblk0p2 b 179 2
+sudo mknod ${CLFS}/targetfs/dev/mmcblk0p3 b 179 3
+sudo mknod ${CLFS}/targetfs/dev/mmcblk0p4 b 179 4
+sudo mknod -m 666 ${CLFS}/targetfs/dev/zero c 1 5
+sudo mknod -m 666 ${CLFS}/targetfs/dev/random c 1 8
+sudo mknod -m 666 ${CLFS}/targetfs/dev/urandom c 1 9
+
+sudo ln -s ./ram0 ${CLFS}/targetfs/dev/ram
 
 sudo chown root ${CLFS}/targetfs/dev/*

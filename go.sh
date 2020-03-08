@@ -127,4 +127,10 @@ step_done
 # Kernel time now
 source scripts/s10-kernel.script
 
+# Rootfs
+source scripts/s11-rootfs.script
+
+# Extra stuff
+source scripts/s12-extra-files.script
+
 msg "All ok, you are done, enjoy."
