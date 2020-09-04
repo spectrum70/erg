@@ -1,0 +1,5 @@
+unset CFLAGS
+
+# Host information
+export ERG=`pwd`
+export ERG_HOST=$(echo ${MACHTYPE} | sed "s/-[^-]*/-cross/")
