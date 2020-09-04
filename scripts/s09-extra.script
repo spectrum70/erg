@@ -1,4 +1,4 @@
-# Sysam CLFS
+# Sysam ERG
 # *** source this file ***
 
-cp extra/motd ${CLFS}/targetfs/etc
+cp extra/motd ${ERG}/targetfs/etc

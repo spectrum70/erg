@@ -20,7 +20,7 @@ if [ "${INITRAMFS}" != "" ]; then
 fi
 
 step "Building kernel ..."
-make ARCH=${CLFS_ARCH} CROSS_COMPILE=${LINUX_CROSS} KALLSYMS_EXTRA_PASS=1 LOADADDR=40001000 zImage
+make ARCH=${ERG_ARCH} CROSS_COMPILE=${LINUX_CROSS} KALLSYMS_EXTRA_PASS=1 LOADADDR=40001000 zImage
 step_done
 step "Preparting U-Boot image ..."
 ${LINUX_CROSS}objcopy -O binary vmlinux linux.bin &>/dev/null
@@ -28,7 +28,7 @@ mkimage -A m68k -O linux -T kernel -C none -a 0x40001000 -n "mainline kernel" -d
 &>1
 step_done
 if [ $? == 0 ]; then
-        cp -f uImage ${CLFS}
+        cp -f uImage ${ERG}
 fi
 cd - &>/dev/null
 

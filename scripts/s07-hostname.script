@@ -1,4 +1,4 @@
-# Sysam CLFS
+# Sysam ERG
 # *** source this file ***
 
-echo "[stmark2]" > ${CLFS}/targetfs/etc/hostname
+echo "${erg_hostname}" > ${ERG}/targetfs/etc/hostname

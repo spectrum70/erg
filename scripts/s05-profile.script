@@ -1,7 +1,7 @@
-# Sysam CLFS
+# Sysam ERG
 # *** source this file ***
 
-cat > ${CLFS}/targetfs/etc/profile << "EOF"
+cat > ${ERG}/targetfs/etc/profile << "EOF"
 # /etc/profile
 
 # Set the initial path

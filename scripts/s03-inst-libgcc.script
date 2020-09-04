@@ -1,5 +1,5 @@
-# Sysam CLFS
+# Sysam ERG
 # *** source this file ***
 
-cp -v ${CLFS}/cross-tools/${CLFS_TARGET}/lib/libgcc_s.so.1 ${CLFS}/targetfs/lib/
-${CLFS_TARGET}-strip ${CLFS}/targetfs/lib/libgcc_s.so.1
+cp -v ${ERG}/cross-tools/${ERG_TARGET}/lib/libgcc_s.so.1 ${ERG}/targetfs/lib/
+${ERG_TARGET}-strip ${ERG}/targetfs/lib/libgcc_s.so.1

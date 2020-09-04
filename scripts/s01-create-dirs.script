@@ -1,10 +1,10 @@
-# Sysam CLFS
+# Sysam ERG
 # *** source this file ***
 
 mkdir -p targetfs
-mkdir -p ${CLFS}/targetfs/{bin,boot,dev,etc,home,lib/{firmware,modules}}
-mkdir -p ${CLFS}/targetfs/{mnt,opt,proc,sbin,srv,sys}
-mkdir -p ${CLFS}/targetfs/var/{cache,lib,local,lock,log,opt,run,spool}
-install -d -m 0750 ${CLFS}/targetfs/root
-install -d -m 1777 ${CLFS}/targetfs/{var/,}tmp
-mkdir -p ${CLFS}/targetfs/usr/{,local/}{bin,include,lib,sbin,share,src}
+mkdir -p ${ERG}/targetfs/{bin,boot,dev,etc,home,lib/{firmware,modules}}
+mkdir -p ${ERG}/targetfs/{mnt,opt,proc,sbin,srv,sys}
+mkdir -p ${ERG}/targetfs/var/{cache,lib,local,lock,log,opt,run,spool}
+install -d -m 0750 ${ERG}/targetfs/root
+install -d -m 1777 ${ERG}/targetfs/{var/,}tmp
+mkdir -p ${ERG}/targetfs/usr/{,local/}{bin,include,lib,sbin,share,src}

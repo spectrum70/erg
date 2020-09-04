@@ -1,7 +1,7 @@
-# Sysam CLFS
+# Sysam ERG
 # *** source this file ***
 
-cat > ${CLFS}/targetfs/etc/mdev.conf<< "EOF"
+cat > ${ERG}/targetfs/etc/mdev.conf<< "EOF"
 # /etc/mdev/conf
 
 # Devices:
