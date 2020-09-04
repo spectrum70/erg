@@ -6,6 +6,9 @@
 export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
 export INITRAMFS="../snmdist/targetfs"
 
+DIR_DL=./downloads
+DIR_BUILD=./build
+
 function err {
         echo -e "\x1b[1;31m+++ "$1"\x1b[0m"
         echo -e "\x1b[31;1;5m+++ there are errors !\x1b[0m"
@@ -30,7 +33,46 @@ function step_done {
 	echo -e "\x1b["${p}"C\x1b[1;36m[\x1b[1;32m done \x1b[1;36m]\x1b[0m"
 }
 
-msg "Greetings, you are using Sysam snmdist (simple no-mmu distribution) !"
+function build_checks {
+	inf "preparing for building tools ..."
+
+	if [ ! -e ${DIR_DL} ]; then
+		mkdir -p ${DIR_DL}
+	fi
+	if [ ! -e ${DIR_BUILD} ]; then
+		mkdir -p $éDIR_BUILD}
+	fi
+}
+
+function build_pkg {
+	pkg=$1
+
+	inf "preparing for building ${pkg} ..."
+
+	source sources/${pkg}/pkg.info
+
+	pkg_name=${pkg_url##*/}
+	pkg_dir=${DIR_BUILD}/${pkg_name%.*.*}
+
+	if [ ! -e ${DIR_DL}/${pkg_name} ]; then
+		wget ${pkg_url} --directory-prefix=${DIR_DL}
+	fi
+	if [ -e ${pkg_dir} ]; then
+		rm -rf ${pkg_dir}
+	fi
+	if [ ${pkg_name: -7} == ".tar.xz" ]; then
+		tar -xxvf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
+	fi
+
+	cd ${pkg_dir}
+	make distclean
+	./configure
+	echo "CFLAGS+=${PKG_CFLAGS}" >> Config
+	make ARCH="${CLFS_ARCH}" CROSS_COMPILE="${CLFS_CROSS}" EXTRA_CFLAGS="${PKG_CFLAGS}" V=1 SKIP_STRIP="y"
+	cd -
+}
+
+msg "Greetings, you are using Sysam snmdist, a simple embedded distribution !"
 msg "Copyright (C) 2017 Angelo Dureghello - Sysam"
 msg "Please visit http://www.sysam.it for further details"
 msg "Press enter to start ..."
@@ -40,7 +82,7 @@ msg "Please select a cpu ..."
 echo "1. mcf54415 flat  (-mcpu=54418)"
 echo "2. mcf5475        (-mcpu=5475,-m5200)"
 echo "3. mcf5407        (-mcpu=5407,-m5200)"
-echo "4. mcf5307        (-mcpu=5307,-m5307)"
+echo "4. mcf5307 flat   (-mcpu=5307,-m5307)"
 echo "5. mcf537x        (-mcpu=537x,-m5200)"
 echo "6. mcf528x        (-mcpu=528x,-m5307)"
 echo "7. mcf5271        (-mcpu=5271,-m5307)"
@@ -61,6 +103,10 @@ case "$c" in
 	;;
 	4)
 	clfs_cpu="-mcpu=5307,-m5307"
+	;;
+	*)
+	echo "not still implemented"
+	exit 1
 	;;
 esac
 
@@ -114,14 +160,14 @@ cd sources/busybox-1.28.1/
 make clean
 make ARCH="${CLFS_ARCH}" menuconfig
 make ARCH="${CLFS_ARCH}" CROSS_COMPILE="${CLFS_CROSS}" EXTRA_CFLAGS="${clfs_cpu}" EXTRA_LDFLAGS="${clfs_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${CLFS}/targetfs" install
-cd ${CLFS}
+cd -
 
 step "Configuring and installing other tools ..."
-#cd sources/lrzsz-0.12.20
-#make distclean
-#./configure --host=m68k
-#make ARCH="${CLFS_ARCH}" CROSS_COMPILE="${CLFS_CROSS}" EXTRA_CFLAGS="${clfs_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${CLFS}/targetfs" install
-#cd -
+
+build_checks
+build_pkg libnetlink
+build_pkg iproute2
+cd -
 step_done
 
 # Kernel time now
