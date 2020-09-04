@@ -2,7 +2,7 @@
 # Sysam ERG - embedded rootfs generator
 
 export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
-export INITRAMFS="../snmdist/targetfs"
+export INITRAMFS="../erg/targetfs"
 
 DIR_DL=./downloads
 DIR_BUILD=./build
@@ -45,7 +45,7 @@ function build_checks {
 		mkdir -p ${DIR_DL}
 	fi
 	if [ ! -e ${DIR_BUILD} ]; then
-		mkdir -p $éDIR_BUILD}
+		mkdir -p ${DIR_BUILD}
 	fi
 }
 
@@ -150,17 +150,17 @@ step "Configuring and installing busybox ..."
 cd sources/busybox-1.28.1/
 make clean
 make ARCH="${ERG_ARCH}" menuconfig
-make ARCH="${ERG_ARCH}" CROSS_COMPILE="${ERG_CROSS}" EXTRA_CFLAGS="${erg_cpu}" EXTRA_LDFLAGS="${erg_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${CLFS}/targetfs" install
+make ARCH="${ERG_ARCH}" CROSS_COMPILE="${ERG_CROSS}" EXTRA_CFLAGS="${erg_cpu}" EXTRA_LDFLAGS="${erg_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${ERG}/targetfs" install
 cd -
 
-step "Configuring and installing other tools ..."
+msg "Configuring and installing other tools ..."
 
 build_checks
-build_pkg libnetlink
 build_pkg iproute2
 cd -
 step_done
 
+step "Building kernel ..."
 # Kernel time now
 source scripts/s10-kernel.script
 
@@ -169,5 +169,6 @@ source scripts/s11-rootfs.script
 
 # Extra stuff
 source scripts/s12-extra-files.script
+step_done
 
 msg "All ok, you are done, enjoy."

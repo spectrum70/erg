@@ -10,3 +10,5 @@ sources/busybox-1.28.1
 sources/linux
 targetfs
 uImage
+build
+Config
