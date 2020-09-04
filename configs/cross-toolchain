@@ -1,0 +1,5 @@
+# Architecture
+export ERG_ARCH=m68k
+
+# Toolchain setup, toolchain is in cross-tools subfolder
+export ERG_CROSS=/home/angelo/x-tools/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-
