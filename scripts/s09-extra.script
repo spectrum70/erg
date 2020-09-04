@@ -1,4 +1,4 @@
-# Sysam ERG
-# *** source this file ***
+#!/bin/sh
 
-cp extra/motd ${ERG}/targetfs/etc
+cp -a extra-files/* targetfs
+

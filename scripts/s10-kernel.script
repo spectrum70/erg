@@ -1,34 +1,35 @@
 #!/bin/bash
-DEFCONFIG=stmark2_defconfig
-LINUX_CROSS=/opt/toolchains/m68k/gcc-5.2.0-nolibc/bin/m68k-linux-
 
-step "Configuring kernel ..."
+export CROSS_COMPILE=/opt/toolchains/m68k/gcc-10.1.0-nolibc/m68k-linux/bin/m68k-linux-
+export ARCH=m68k
+
+
+
+msg "Configuring kernel ..."
 cd sources/linux
-make ARCH=${CLFS_ARCH} CROSS_COMPILE=${LINUX_CROSS} ${DEFCONFIG} &>/dev/null
+make stmark2_defconfig
 if [ $? -ne 0 ]; then err "defconfig error"; exit 1; fi
-step_done
-if [ "${CMD_LINE}" != "" ]; then
-        step "Setting kernel command line ..."
-        scripts/config --set-str BOOTPARAM_STRING "${CMD_LINE}"
-        step_done
-fi
 
-if [ "${INITRAMFS}" != "" ]; then
-        step "Setting initramfs ..."
-        scripts/config --set-str INITRAMFS_SOURCE "${INITRAMFS}"
-        step_done
-fi
+#if [ "${CMD_LINE}" != "" ]; then
+#        step "Setting kernel command line ..."
+#        scripts/config --set-str BOOTPARAM_STRING "${CMD_LINE}"
+#        step_done
+#fi
 
-step "Building kernel ..."
-make ARCH=${ERG_ARCH} CROSS_COMPILE=${LINUX_CROSS} KALLSYMS_EXTRA_PASS=1 LOADADDR=40001000 zImage
-step_done
-step "Preparting U-Boot image ..."
-${LINUX_CROSS}objcopy -O binary vmlinux linux.bin &>/dev/null
-mkimage -A m68k -O linux -T kernel -C none -a 0x40001000 -n "mainline kernel" -d linux.bin uImage &>/dev/null
-&>1
-step_done
+#if [ "${INITRAMFS}" != "" ]; then
+#        step "Setting initramfs ..."
+#        scripts/config --set-str INITRAMFS_SOURCE "${INITRAMFS}"
+#        step_done
+#fi
+
+msg "Building kernel ..."
+make -j24 KALLSYMS_EXTRA_PASS=1 LOADADDR=40001000 zImage
+
+msg "Preparting U-Boot image ..."
+${CROSS_COMPILE}objcopy -O binary vmlinux linux.bin &>/dev/null
+mkimage -A m68k -O linux -T kernel -C none -a 0x40001000 -n "mainline kernel" -d linux.bin uImage &>/dev/null &>1
 if [ $? == 0 ]; then
-        cp -f uImage ${ERG}
+        cp -f uImage ${DIR_ERG}
 fi
 cd - &>/dev/null
 

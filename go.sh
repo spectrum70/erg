@@ -1,37 +1,46 @@
-#!/bin/bash
+#!/bin/sh
 # Sysam ERG - embedded rootfs generator
+# Angelo Dureghello (C) 2020
+
+go_version=0.9.0
 
 export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
 export INITRAMFS="../erg/targetfs"
+export DIR_ERG=${PWD}
 
 DIR_DL=./downloads
 DIR_BUILD=./build
+DIR_CFG=./configs
+DIR_SRC_CFG=${DIR_CFG}/sources
 
 function err {
+	echo
 	echo -e "\x1b[1;31m+++ "$1"\x1b[0m"
 	echo -e "\x1b[31;1;5m+++ there are errors !\x1b[0m"
 	exit 1
 }
 
 function inf {
-	echo -e "\x1b[1;33m--- "$1"\x1b[0m"
+	echo -e "\x1b[1;33m"$1"\x1b[0m"
 }
 
 function msg {
-	echo -e "\x1b[1;34m--- "$1"\x1b[0m"
+	echo -e "\x1b[;1m"$1"\x1b[0m"
 }
 
 function welcome {
-	echo -e "\x1b[36;1mHello, welcome to erg !\x1b[0m"
-	echo -e "\x1b[35;1merg v.${erg_version} Copyright (C) 2017 Angelo Dureghello - Sysam\x1b[0m"
-	echo -e "\x1b[37;1mPress enter to start ...\x1b[0m"
-	read -p ""
+	clear
+	echo
+	echo -e "\x1b[35;1mHello, welcome to erg !\x1b[0m"
+	echo -e "\x1b[;1merg v.${erg_version} " \
+		"Copyright (C) 2017 Angelo Dureghello - Sysam\x1b[0m"
+	echo
 }
 
 function step {
 	local msglen=${#1}
 	let "p=50-${msglen}"
-	echo -n -e "\x1b[1;35m--- "$1"\x1b[0m"
+	echo -n -e "\x1b[;1m* "$1"\x1b[0m"
 }
 
 function step_done {
@@ -39,7 +48,7 @@ function step_done {
 }
 
 function build_checks {
-	inf "preparing for building tools ..."
+	inf "preparing for building ..."
 
 	if [ ! -e ${DIR_DL} ]; then
 		mkdir -p ${DIR_DL}
@@ -49,10 +58,21 @@ function build_checks {
 	fi
 }
 
+function handle_menuconfig {
+	if [ "${1}" = "busybox" ]; then
+		if [ -e ${DIR_ERG}/${DIR_SRC_CFG}/${1}/.config ]; then
+			cp ${DIR_ERG}/${DIR_SRC_CFG}/${1}/.config \
+				${DIR_ERG}/${2}/.config
+		else
+			make menuconfig
+		fi
+	fi
+}
+
 function build_pkg {
 	pkg=$1
 
-	inf "preparing for building ${pkg} ..."
+	inf "package [${pkg}]: downloading ..."
 
 	source sources/${pkg}/pkg.info
 
@@ -65,28 +85,84 @@ function build_pkg {
 	if [ -e ${pkg_dir} ]; then
 		rm -rf ${pkg_dir}
 	fi
+
+	inf "package [${pkg}]: extracting ..."
+
 	if [ ${pkg_name: -7} == ".tar.xz" ]; then
-		tar -xxvf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
+		tar -xxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
 	fi
+	if [ ${pkg_name: -8} == ".tar.bz2" ]; then
+		tar -jxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
+	fi
+
+	inf "package [${pkg}]: building ..."
 
 	cd ${pkg_dir}
 	make distclean
-	./configure
+
+	if [ -e "./configure" ]; then
+		./configure
+	fi
+
+	# Some special packages as Busybox uses .config / menuconfig
+	handle_menuconfig ${pkg} ${pkg_dir}
+
+	# if there is no configure, likely, a Makefile is there (busybox)
+
 	echo "CFLAGS+=${PKG_CFLAGS}" >> Config
-	make ARCH="${ERG_ARCH}" CROSS_COMPILE="${ERG_CROSS}" EXTRA_CFLAGS="${PKG_CFLAGS}" V=1 SKIP_STRIP="y"
+	echo "LDFLAGS+=${PKG_LDFLAGS}" >> Config
+	make ARCH="${ERG_ARCH}" CROSS_COMPILE="${ERG_CROSS}" \
+		EXTRA_CFLAGS="${PKG_CFLAGS}" EXTRA_LDFLAGS="${PKG_LDFLAGS}" \
+		V=1 SKIP_STRIP="y" \
+		CONFIG_PREFIX="${DIR_ERG}/targetfs" install
 	cd -
 }
 
-source version
+function usage {
+	echo "go.sh, erg build system helper v." ${go_version}
+	echo "Angelo Dureghello (C) sysam.it 2019, 2020"
+	echo "Usage: ./go.sh [option]"
+	echo "Options: -h --help      shows this help"
+	echo "         -k --kernel    build kernel and modules"
+	exit 1
+}
+
+
+options=$(getopt -n "$0"  -o hmc --long "help,modules,config,clean"  -- "$@")
+
+if [ $? -ne 0 ]; then exit 1; fi
+
+# A little magic, necessary when using getopt.
+eval set -- "$options"
+
+while true;
+do
+	case "$1" in
+	-h | --help)
+	usage
+	;;
+	--k | --kernel)
+	build_kernel=1
+	;;
+	--)
+	shift
+	break;;
+	esac
+done
+
+
+source ./version
 
 welcome
 
-msg "Please select a cpu ..."
+msg "Please select a configuration ..."
 echo
-echo "1. m68k  mcf54415 flat  (-mcpu=54418)"
-echo "2. m68k  mcf5307 flat   (-mcpu=5307,-m5307)"
+echo "n. ARCH  CPU/SoC   binary"
 echo
-read -n 1 c
+echo "1. m68k  mcf54415  flat    (-mcpu=54418)"
+echo "2. m68k  mcf5307   flat    (-mcpu=5307,-m5307)"
+echo
+read -s -n 1 c
 
 case "$c" in
 	1)
@@ -110,6 +186,7 @@ step_done
 step "Reading configurations ..."
 source ./configs/cross-toolchain
 source ./configs/hostname
+source ./configs/board-support
 step_done
 
 step "Preparing targetfs tree ... "
@@ -144,31 +221,21 @@ step "Copying extra files ... "
 source scripts/s09-extra.script
 step_done
 
-msg "Target fs created successfully."
+echo
 
-step "Configuring and installing busybox ..."
-cd sources/busybox-1.28.1/
-make clean
-make ARCH="${ERG_ARCH}" menuconfig
-make ARCH="${ERG_ARCH}" CROSS_COMPILE="${ERG_CROSS}" EXTRA_CFLAGS="${erg_cpu}" EXTRA_LDFLAGS="${erg_cpu}" V=1 SKIP_STRIP="y" CONFIG_PREFIX="${ERG}/targetfs" install
-cd -
-
-msg "Configuring and installing other tools ..."
+msg "Building packages ..."
 
 build_checks
-build_pkg iproute2
-cd -
-step_done
+build_pkg busybox
+#build_pkg iproute2
 
-step "Building kernel ..."
-# Kernel time now
-source scripts/s10-kernel.script
-
+if [ -n "${build_kernel}" ]; then
+	msg "Building kernel ..."
+	# Kernel time now
+	source scripts/s10-kernel.script
+fi
 # Rootfs
 source scripts/s11-rootfs.script
 
-# Extra stuff
-source scripts/s12-extra-files.script
-step_done
 
 msg "All ok, you are done, enjoy."

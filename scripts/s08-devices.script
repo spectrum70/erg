@@ -1,33 +1,33 @@
 # Sysam ERG
 # *** source this file ***
 
-sudo cp -a /dev/{null,console} ${ERG}/targetfs/dev/
-sudo cp -a /dev/ttyS0 ${ERG}/targetfs/dev/
-sudo cp -a /dev/ttyS1 ${ERG}/targetfs/dev/
-sudo cp -a /dev/tty1 ${ERG}/targetfs/dev/
-sudo cp -a /dev/tty2 ${ERG}/targetfs/dev/
-sudo cp -a /dev/tty3 ${ERG}/targetfs/dev/
-sudo cp -a /dev/tty4 ${ERG}/targetfs/dev/
-sudo cp -a /dev/tty5 ${ERG}/targetfs/dev/
-sudo cp -a /dev/tty6 ${ERG}/targetfs/dev/
-sudo mknod ${ERG}/targetfs/dev/mtdblock0 b 31 0
-sudo mknod ${ERG}/targetfs/dev/mtdblock1 b 31 1
-sudo mknod ${ERG}/targetfs/dev/mtdblock2 b 31 2
-sudo mknod ${ERG}/targetfs/dev/mtdblock3 b 31 3
-sudo mknod ${ERG}/targetfs/dev/mtd0 c 90 0
-sudo mknod ${ERG}/targetfs/dev/mtd1 c 90 2
-sudo mknod ${ERG}/targetfs/dev/mtd2 c 90 4
-sudo mknod ${ERG}/targetfs/dev/mtd3 c 90 6
-sudo mknod ${ERG}/targetfs/dev/ram0 b 1 1
-sudo mknod ${ERG}/targetfs/dev/mmcblk0 b 179 0
-sudo mknod ${ERG}/targetfs/dev/mmcblk0p1 b 179 1
-sudo mknod ${ERG}/targetfs/dev/mmcblk0p2 b 179 2
-sudo mknod ${ERG}/targetfs/dev/mmcblk0p3 b 179 3
-sudo mknod ${ERG}/targetfs/dev/mmcblk0p4 b 179 4
-sudo mknod -m 666 ${ERG}/targetfs/dev/zero c 1 5
-sudo mknod -m 666 ${ERG}/targetfs/dev/random c 1 8
-sudo mknod -m 666 ${ERG}/targetfs/dev/urandom c 1 9
+sudo cp -a /dev/{null,console} ${DIR_ERG}/targetfs/dev/
+sudo cp -a /dev/ttyS0 ${DIR_ERG}/targetfs/dev/
+sudo cp -a /dev/ttyS1 ${DIR_ERG}/targetfs/dev/
+sudo cp -a /dev/tty1 ${DIR_ERG}/targetfs/dev/
+sudo cp -a /dev/tty2 ${DIR_ERG}/targetfs/dev/
+sudo cp -a /dev/tty3 ${DIR_ERG}/targetfs/dev/
+sudo cp -a /dev/tty4 ${DIR_ERG}/targetfs/dev/
+sudo cp -a /dev/tty5 ${DIR_ERG}/targetfs/dev/
+sudo cp -a /dev/tty6 ${DIR_ERG}/targetfs/dev/
+sudo mknod ${DIR_ERG}/targetfs/dev/mtdblock0 b 31 0
+sudo mknod ${DIR_ERG}/targetfs/dev/mtdblock1 b 31 1
+sudo mknod ${DIR_ERG}/targetfs/dev/mtdblock2 b 31 2
+sudo mknod ${DIR_ERG}/targetfs/dev/mtdblock3 b 31 3
+sudo mknod ${DIR_ERG}/targetfs/dev/mtd0 c 90 0
+sudo mknod ${DIR_ERG}/targetfs/dev/mtd1 c 90 2
+sudo mknod ${DIR_ERG}/targetfs/dev/mtd2 c 90 4
+sudo mknod ${DIR_ERG}/targetfs/dev/mtd3 c 90 6
+sudo mknod ${DIR_ERG}/targetfs/dev/ram0 b 1 1
+sudo mknod ${DIR_ERG}/targetfs/dev/mmcblk0 b 179 0
+sudo mknod ${DIR_ERG}/targetfs/dev/mmcblk0p1 b 179 1
+sudo mknod ${DIR_ERG}/targetfs/dev/mmcblk0p2 b 179 2
+sudo mknod ${DIR_ERG}/targetfs/dev/mmcblk0p3 b 179 3
+sudo mknod ${DIR_ERG}/targetfs/dev/mmcblk0p4 b 179 4
+sudo mknod -m 666 ${DIR_ERG}/targetfs/dev/zero c 1 5
+sudo mknod -m 666 ${DIR_ERG}/targetfs/dev/random c 1 8
+sudo mknod -m 666 ${DIR_ERG}/targetfs/dev/urandom c 1 9
 
-sudo ln -s ./ram0 ${ERG}/targetfs/dev/ram
+sudo ln -s ./ram0 ${DIR_ERG}/targetfs/dev/ram
 
-sudo chown root ${ERG}/targetfs/dev/*
+sudo chown root ${DIR_ERG}/targetfs/dev/*

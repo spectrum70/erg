@@ -18,8 +18,7 @@ An interactive menu will ask architecture and SoC/cpu tu build for.
 
 2. Setup
 
-Cross toolchain is right now set in configs/cross-toolchain, the path
-needs to be eventually updated manually.
+Cross toolchain path is actually manually set in configs/cross-toolchain..
 Other useful things can be set manually over configs/ files.
 
 3. Packages

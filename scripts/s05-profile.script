@@ -1,7 +1,7 @@
 # Sysam ERG
 # *** source this file ***
 
-cat > ${ERG}/targetfs/etc/profile << "EOF"
+cat > ${DIR_ERG}/targetfs/etc/profile << "EOF"
 # /etc/profile
 
 # Set the initial path

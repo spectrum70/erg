@@ -1,7 +1,7 @@
 # Sysam ERG
 # *** source this file ***
 
-cat > ${ERG}/targetfs/etc/mdev.conf<< "EOF"
+cat > ${DIR_ERG}/targetfs/etc/mdev.conf<< "EOF"
 # /etc/mdev/conf
 
 # Devices:

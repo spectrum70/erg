@@ -1,4 +1,4 @@
 # Sysam ERG
 # *** source this file ***
 
-echo "${erg_hostname}" > ${ERG}/targetfs/etc/hostname
+echo "${erg_hostname}" > ${DIR_ERG}/targetfs/etc/hostname

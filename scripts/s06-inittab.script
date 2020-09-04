@@ -1,17 +1,17 @@
 # Sysam ERG
 # *** source this file ***
 
-mkdir -p ${ERG}/targetfs/etc/rc.d
+mkdir -p ${DIR_ERG}/targetfs/etc/rc.d
 
-cat >  ${ERG}/targetfs/etc/rc.d/startup<< "EOF"
+cat >  ${DIR_ERG}/targetfs/etc/rc.d/startup<< "EOF"
 /bin/mount -t proc proc /proc
 /bin/mount -t sysfs sysfs /sys
 cat /etc/motd
 EOF
 
-chmod 755 ${ERG}/targetfs/etc/rc.d/startup
+chmod 755 ${DIR_ERG}/targetfs/etc/rc.d/startup
 
-cat > ${ERG}/targetfs/etc/inittab<< "EOF"
+cat > ${DIR_ERG}/targetfs/etc/inittab<< "EOF"
 # /etc/inittab
 ::sysinit:/bin/sh /etc/rc.d/startup
 ttyS0::respawn:-/bin/sh

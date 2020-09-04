@@ -1,12 +1,12 @@
 # Sysam ERG
 # *** source this file ***
 
-ln -sf ../proc/mounts ${ERG}/targetfs/etc/mtab
-cat > ${ERG}/targetfs/etc/passwd << "EOF"
+ln -sf ../proc/mounts ${DIR_ERG}/targetfs/etc/mtab
+cat > ${DIR_ERG}/targetfs/etc/passwd << "EOF"
 root::0:0:root:/root:/bin/ash
 EOF
 
 # The login, agetty, and init programs (and others) use the lastlog file to
 # record information
-touch ${ERG}/targetfs/var/log/lastlog
-chmod 664 ${ERG}/targetfs/var/log/lastlog
+touch ${DIR_ERG}/targetfs/var/log/lastlog
+chmod 664 ${DIR_ERG}/targetfs/var/log/lastlog
