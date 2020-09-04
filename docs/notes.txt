@@ -1,0 +1,43 @@
+Sysam erg                                              doc ver: 001 - 04 Sep 2020
+
+
+Some useful notes
+
+
+
+
+1. Introduction
+
+Complexity grows continuosly in the embedded build systems design-principles, 
+often cargo-cult and overdesign brings to the typcal feeling that more features
+and advanced technologies are always better. A fashon that companies then copy
+by each other, but finally without a real need to use such complex systems,
+
+This choice introduce a not so small learning-curve, and the new and complec
+technology, for programmers that are not really experts in it, becomes a real
+enemy, producing days and days of delays in matching the timeline targets.
+
+This simple build system has been created by Sysam for internal usage, to build
+small root file systems for ColdFire no-mmu SoC's, with the ambition to be
+simple, unuseful user-level complexity to reach the final purpose is strictly
+forbidden. The big ambition is also to expanded for several architectures, but 
+staying simple.
+
+
+2. Toolchains
+
+Depending on architectures, specific toolchains must be used. Often, a proper
+toolchain configuration must be met to properly build binaries for the desired 
+target system, i.e.:
+
+m68k no-mmu flat
+
+
+
+3. Known limitations
+
+3.1. Of the erg system
+
+The erg progresses over time, Limitations are many and listing them would cause
+just a continuous document update problem.
+
