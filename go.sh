@@ -2,7 +2,7 @@
 # Sysam ERG - embedded rootfs generator
 # Angelo Dureghello (C) 2020
 
-go_version=0.9.0
+go_version=0.9.2
 
 export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
 export INITRAMFS="../erg/targetfs"
@@ -60,11 +60,18 @@ function build_checks {
 
 function handle_menuconfig {
 	if [ "${1}" = "busybox" ]; then
-		if [ -e ${DIR_ERG}/${DIR_SRC_CFG}/${1}/.config ]; then
+		if [ -n "${busybox_reconf}" ]; then
 			cp ${DIR_ERG}/${DIR_SRC_CFG}/${1}/.config \
-				${DIR_ERG}/${2}/.config
-		else
+ 				${DIR_ERG}/${2}/.config
 			make menuconfig
+			cp .config ${DIR_ERG}/${DIR_SRC_CFG}/${1}/.config
+		else
+			if [ -e ${DIR_ERG}/${DIR_SRC_CFG}/${1}/.config ]; then
+				cp ${DIR_ERG}/${DIR_SRC_CFG}/${1}/.config \
+					${DIR_ERG}/${2}/.config
+			else
+				make menuconfig
+			fi
 		fi
 	fi
 }
@@ -124,11 +131,12 @@ function usage {
 	echo "Usage: ./go.sh [option]"
 	echo "Options: -h --help      shows this help"
 	echo "         -k --kernel    build kernel and modules"
+	echo "         -c --config    force busybox reconfig"
 	exit 1
 }
 
 
-options=$(getopt -n "$0"  -o hmc --long "help,modules,config,clean"  -- "$@")
+options=$(getopt -n "$0" -o hkc --long "help,kernel,config"  -- "$@")
 
 if [ $? -ne 0 ]; then exit 1; fi
 
@@ -139,17 +147,19 @@ while true;
 do
 	case "$1" in
 	-h | --help)
-	usage
-	;;
+		usage
+		;;
 	--k | --kernel)
-	build_kernel=1
-	;;
+		build_kernel=1
+		break;;
+	--c | --config)
+		busybox_reconf=1
+		break;;
 	--)
-	shift
-	break;;
+		shift
+		break;;
 	esac
 done
-
 
 source ./version
 

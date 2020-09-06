@@ -2,6 +2,4 @@
 export ERG_ARCH=m68k
 
 # Toolchain setup, toolchain is in cross-tools subfolder
-#export ERG_CROSS=/home/angelo/x-tools/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-
-export ERG_CROSS=/media/ssd_a/opt/toolchains/m68k/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-
-export ERG_CROSS=/home/angelo/dev-sysam/erg/cross-tools/bin/m68k-sysam-uclinux-uclibc-
+export ERG_CROSS=/opt/toolchains/m68k/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-

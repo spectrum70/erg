@@ -31,8 +31,10 @@ toolchain configuration must be met to properly build binaries for the desired
 target system, i.e.:
 
 m68k no-mmu flat
-
-
+ - enable multilib is mandatory (otherwise exitcode 0x0000000b, SIGSEGV)
+ - to enable multilib, speficic uClibc-ng config is needed, to build a 
+   crosstools-ng toolchian use config files in crotttools-ng folder.
+ * actually, enabling c++ produces errors
 
 3. Known limitations
 

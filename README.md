@@ -19,6 +19,7 @@ An interactive menu will ask architecture and SoC/cpu tu build for.
 2. Setup
 
 Cross toolchain path is actually manually set in configs/cross-toolchain..
+Use crosstools-ng to create your own toolchain.
 Other useful things can be set manually over configs/ files.
 
 3. Packages
