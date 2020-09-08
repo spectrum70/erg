@@ -26,15 +26,25 @@ staying simple.
 
 2. Toolchains
 
-Depending on architectures, specific toolchains must be used. Often, a proper
-toolchain configuration must be met to properly build binaries for the desired 
-target system, i.e.:
+Depending on architectures, specific toolchains must be used. The erg is not 
+including a toolchain build process, since it would require much additioanl 
+job unrelated to the rootfs building process. We are providing some suitable 
+configurations for most famous toolchain builders and uclibc.
 
-m68k no-mmu flat
- - enable multilib is mandatory (otherwise exitcode 0x0000000b, SIGSEGV)
+See configs/toolchains
+
+Notes:
+
+m68k no-mmu flat for ColdFire:
+ - used ct-ng
+ - to enable multilib is mandatory (otherwise exitcode 0x0000000b, SIGSEGV)
  - to enable multilib, speficic uClibc-ng config is needed, to build a 
    crosstools-ng toolchian use config files in crotttools-ng folder.
  * actually, enabling c++ produces errors
+
+m68k mmu elf dor ColdFire:
+ - a suitable toolchains has been produced by openadk
+
 
 3. Known limitations
 

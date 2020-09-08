@@ -2,7 +2,7 @@
 # Sysam ERG - embedded rootfs generator
 # Angelo Dureghello (C) 2020
 
-go_version=0.9.3
+go_version=0.9.4
 
 export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
 export INITRAMFS="../erg/targetfs"
@@ -118,7 +118,7 @@ function pkg_build {
 	make distclean
 
 	if [ -e "./configure" ]; then
-		./configure
+		./configure --host=m68k
 	fi
 
 	echo "CFLAGS+=${PKG_CFLAGS}" >> Config
@@ -258,6 +258,7 @@ build_checks
 pkg_build busybox
 # packages that can be built only with mmu and elf
 if [ -n "${flat}" ]; then
+	# pkg_build iptables
 	pkg_build iproute2
 fi
 

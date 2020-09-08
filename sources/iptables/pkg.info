@@ -1,0 +1,6 @@
+pkg_url="http://www.netfilter.org/projects/iptables/files/iptables-1.8.3.tar.bz2"
+export CC=${ERG_CROSS}gcc
+export AR=${ERG_CROSS}ar
+export PKG_CFLAGS="-static -Os -mcpu=54418"
+export PKG_LDFLAGS="-static"
+export MAKEVARS="DESTDIR=${DIR_ERG}/targetfs"

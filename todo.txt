@@ -1,0 +1,4 @@
+TODO
+
+understand why iptables elf build fails
+prepare recipes with lists of packages and deps
