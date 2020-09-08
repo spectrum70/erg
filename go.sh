@@ -2,7 +2,7 @@
 # Sysam ERG - embedded rootfs generator
 # Angelo Dureghello (C) 2020
 
-go_version=0.9.2
+go_version=0.9.3
 
 export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
 export INITRAMFS="../erg/targetfs"
@@ -29,7 +29,6 @@ function msg {
 }
 
 function welcome {
-	clear
 	echo
 	echo -e "\x1b[35;1mHello, welcome to erg !\x1b[0m"
 	echo -e "\x1b[;1merg v.${erg_version} " \
@@ -76,7 +75,18 @@ function handle_menuconfig {
 	fi
 }
 
-function build_pkg {
+function pkg_apply_patches {
+	sources_dir=${DIR_ERG}/$1
+
+	if [ -e ${sources_dir}/patches ]; then
+		while IFS= read -r patch; do
+			echo "applying ${patch} ..."
+			patch -p1 < ${sources_dir}/${patch}
+		done < ${sources_dir}/patches
+	fi
+}
+
+function pkg_build {
 	pkg=$1
 
 	inf "package [${pkg}]: downloading ..."
@@ -102,7 +112,7 @@ function build_pkg {
 		tar -jxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
 	fi
 
-	inf "package [${pkg}]: building ..."
+	inf "package [${pkg}]: configuring ..."
 
 	cd ${pkg_dir}
 	make distclean
@@ -111,17 +121,21 @@ function build_pkg {
 		./configure
 	fi
 
+	echo "CFLAGS+=${PKG_CFLAGS}" >> Config
+	echo "LDFLAGS+=${PKG_LDFLAGS}" >> Config
+
 	# Some special packages as Busybox uses .config / menuconfig
 	handle_menuconfig ${pkg} ${pkg_dir}
 
-	# if there is no configure, likely, a Makefile is there (busybox)
+	inf "package [${pkg}]: patching ..."
+	pkg_apply_patches sources/${pkg}
 
-	echo "CFLAGS+=${PKG_CFLAGS}" >> Config
-	echo "LDFLAGS+=${PKG_LDFLAGS}" >> Config
+	inf "package [${pkg}]: building ..."
+
 	make ARCH="${ERG_ARCH}" CROSS_COMPILE="${ERG_CROSS}" \
 		EXTRA_CFLAGS="${PKG_CFLAGS}" EXTRA_LDFLAGS="${PKG_LDFLAGS}" \
 		V=1 SKIP_STRIP="y" \
-		CONFIG_PREFIX="${DIR_ERG}/targetfs" install
+		CONFIG_PREFIX="${DIR_ERG}/targetfs" ${MAKEVARS} install
 	cd -
 }
 
@@ -134,7 +148,6 @@ function usage {
 	echo "         -c --config    force busybox reconfig"
 	exit 1
 }
-
 
 options=$(getopt -n "$0" -o hkc --long "help,kernel,config"  -- "$@")
 
@@ -171,15 +184,21 @@ echo "n. ARCH  CPU/SoC   binary"
 echo
 echo "1. m68k  mcf54415  flat    (-mcpu=54418)"
 echo "2. m68k  mcf5307   flat    (-mcpu=5307,-m5307)"
-echo
+echo "3. m68k  mcf54415  elf     (-mcpu=54418)"
 read -s -n 1 c
 
 case "$c" in
 	1)
 	erg_cpu="-mcpu=54418"
+	flat=1
 	;;
 	2)
 	erg_cpu="-mcpu=5307,-m5307"
+	flat=1
+	;;
+	3)
+	erg_cpu="-mcpu=54418"
+	flat=0
 	;;
 	*)
 	echo "not still implemented"
@@ -236,8 +255,11 @@ echo
 msg "Building packages ..."
 
 build_checks
-build_pkg busybox
-#build_pkg iproute2
+pkg_build busybox
+# packages that can be built only with mmu and elf
+if [ -n "${flat}" ]; then
+	pkg_build iproute2
+fi
 
 if [ -n "${build_kernel}" ]; then
 	msg "Building kernel ..."

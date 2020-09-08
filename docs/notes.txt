@@ -43,3 +43,8 @@ m68k no-mmu flat
 The erg progresses over time, Limitations are many and listing them would cause
 just a continuous document update problem.
 
+
+3.2. no-mmu
+
+On no-mmu cpu's fork cannot work, since linux immplements fork by copy-on-write
+mechanisms that no-mmu SoC's does not support.

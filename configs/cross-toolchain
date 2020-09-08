@@ -2,4 +2,7 @@
 export ERG_ARCH=m68k
 
 # Toolchain setup, toolchain is in cross-tools subfolder
+# flat
 export ERG_CROSS=/opt/toolchains/m68k/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-
+# elf
+export ERG_CROSS=/opt/toolchains/m68k/m68k-openadk-linux-uclibc/bin/m68k-openadk-linux-uclibc-

@@ -1,0 +1,48 @@
+diff -rubN iproute2-3.15.0/ip/ipnetns.c iproute2-3.15.0-new/ip/ipnetns.c
+--- iproute2-3.15.0/ip/ipnetns.c	2014-06-10 18:39:14.000000000 +0200
++++ iproute2-3.15.0-new/ip/ipnetns.c	2020-09-07 09:45:51.532710734 +0200
+@@ -192,7 +192,7 @@
+ 		int status;
+ 		pid_t pid;
+ 
+-		pid = fork();
++		pid = vfork();
+ 		if (pid < 0) {
+ 			perror("fork");
+ 			exit(1);
+diff -rubN iproute2-3.15.0/misc/ifstat.c iproute2-3.15.0-new/misc/ifstat.c
+--- iproute2-3.15.0/misc/ifstat.c	2014-06-10 18:39:14.000000000 +0200
++++ iproute2-3.15.0-new/misc/ifstat.c	2020-09-07 09:45:04.962711354 +0200
+@@ -601,7 +601,7 @@
+ 				pid_t pid;
+ 				if (children >= 5) {
+ 					close(clnt);
+-				} else if ((pid = fork()) != 0) {
++				} else if ((pid = vfork()) != 0) {
+ 					if (pid>0)
+ 						children++;
+ 					close(clnt);
+diff -rubN iproute2-3.15.0/misc/nstat.c iproute2-3.15.0-new/misc/nstat.c
+--- iproute2-3.15.0/misc/nstat.c	2014-06-10 18:39:14.000000000 +0200
++++ iproute2-3.15.0-new/misc/nstat.c	2020-09-07 09:45:31.532710997 +0200
+@@ -430,7 +430,7 @@
+ 				pid_t pid;
+ 				if (children >= 5) {
+ 					close(clnt);
+-				} else if ((pid = fork()) != 0) {
++				} else if ((pid = vfork()) != 0) {
+ 					if (pid>0)
+ 						children++;
+ 					close(clnt);
+diff -rubN iproute2-3.15.0/misc/rtacct.c iproute2-3.15.0-new/misc/rtacct.c
+--- iproute2-3.15.0/misc/rtacct.c	2014-06-10 18:39:14.000000000 +0200
++++ iproute2-3.15.0-new/misc/rtacct.c	2020-09-07 09:45:16.102711202 +0200
+@@ -392,7 +392,7 @@
+ 				pid_t pid;
+ 				if (children >= 5) {
+ 					close(clnt);
+-				} else if ((pid = fork()) != 0) {
++				} else if ((pid = vfork()) != 0) {
+ 					if (pid>0)
+ 						children++;
+ 					close(clnt);
