@@ -1,5 +1,1 @@
-pkg_url="https://busybox.net/downloads/busybox-1.28.1.tar.bz2"
-export CC=${ERG_CROSS}gcc
-export AR=${ERG_CROSS}ar
-export PKG_CFLAGS=-mcpu=54418
-export PKG_LDFLAGS=${PKG_CFLAGS}
+pkg_url="https://busybox.net/downloads/busybox-${pkg_ver}.tar.bz2"

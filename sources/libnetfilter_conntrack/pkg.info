@@ -1,0 +1,3 @@
+pkg_url="https://www.netfilter.org/projects/libnetfilter_conntrack/files/libnetfilter_conntrack-${pkg_ver}.tar.bz2"
+export pkg_cflags="-static -I${DIR_ERG}/targetfs/usr/include"
+export pkg_ldflags="-static"

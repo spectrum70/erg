@@ -3,8 +3,6 @@
 export CROSS_COMPILE=/opt/toolchains/m68k/gcc-10.1.0-nolibc/m68k-linux/bin/m68k-linux-
 export ARCH=m68k
 
-
-
 msg "Configuring kernel ..."
 cd sources/linux
 make stmark2_defconfig

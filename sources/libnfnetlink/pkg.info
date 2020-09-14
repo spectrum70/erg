@@ -1,0 +1,2 @@
+pkg_url="https://www.netfilter.org/projects/libnfnetlink/files/libnfnetlink-${pkg_ver}.tar.bz2"
+export pkg_cflags="-static"

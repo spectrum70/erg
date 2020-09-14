@@ -1,6 +1,4 @@
-pkg_url="https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-3.15.0.tar.xz"
-export CC=${ERG_CROSS}gcc
-export AR=${ERG_CROSS}ar
-export PKG_CFLAGS="-static -Os -mcpu=54418"
+pkg_url="https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-${pkg_ver}.tar.xz"
+export PKG_CFLAGS="-static"
 export PKG_LDFLAGS="-static"
 export MAKEVARS="DESTDIR=${DIR_ERG}/targetfs SHARED_LIBS=n"

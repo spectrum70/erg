@@ -1,4 +1,6 @@
 unset CFLAGS
 
+dist_cflags="-Os"
+
 # Host information
 export ERG_HOST=$(echo ${MACHTYPE} | sed "s/-[^-]*/-cross/")

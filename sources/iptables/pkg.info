@@ -1,6 +1,4 @@
-pkg_url="http://www.netfilter.org/projects/iptables/files/iptables-1.8.3.tar.bz2"
-export CC=${ERG_CROSS}gcc
-export AR=${ERG_CROSS}ar
-export PKG_CFLAGS="-static -Os -mcpu=54418"
-export PKG_LDFLAGS="-static"
-export MAKEVARS="DESTDIR=${DIR_ERG}/targetfs"
+pkg_url="http://www.netfilter.org/projects/iptables/files/iptables-${pkg_ver}.tar.bz2"
+export pkg_cflags="-static -I${DIR_ERG}/targetfs/usr/include -DNO_SHARED_LIBS"
+export pkg_ldflags="-static -L${DIR_ERG}/targetfs/usr/lib"
+export pkg_confopts="--disable-ipv6 --disable-xml --enable-static --enable-shared"
