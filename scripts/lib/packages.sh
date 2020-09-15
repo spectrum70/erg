@@ -46,7 +46,7 @@ function pkg_build_makeonly {
 	echo "CFLAGS+=${build_cflags}" >> Config
 	echo "LDFLAGS+=${build_cflags}" >> Config
 
-	make ARCH="${arch}" CROSS_COMPILE="${erg_cross}" \
+	make ARCH="${arch}" CROSS_COMPILE="${erg_cross}" CC=${erg_cross}gcc \
 		EXTRA_CFLAGS="${build_cflags}" EXTRA_LDFLAGS="${build_ldflags}" \
 		V=1 SKIP_STRIP="y" \
 		CONFIG_PREFIX="${DIR_ERG}/targetfs" ${MAKEVARS} install
@@ -61,33 +61,39 @@ function pkg_configure_classic {
 	export CC=${erg_cross}gcc
 	export AR=${erg_cross}ar
 
+	pkg_apply_patches ${1}
+
 	./configure --host=${target_host} \
 			--target=${target_host} \
 			--prefix=${DIR_ERG}/targetfs/usr \
 			${pkg_confopts}
 
 	# Other packages may need this
+	echo "CC=${erg_cross}gcc" >> Config
+	echo "AR=${erg_cross}ar" >> Config
 	echo "CFLAGS+=${build_cflags}" >> Config
 	echo "LDFLAGS+=${build_cflags}" >> Config
 
-	pkg_apply_patches ${1}
-
 	inf "package [${1}]: building ..."
 
-	make ARCH="${arch}" CROSS_COMPILE="${erg_cross}" V=1 \
-		CFLAGS="${build_cflags}" \
+	make ARCH="${arch}" \
+		CROSS_COMPILE="${erg_cross}" V=1 \
+		${MAKEVARS} \
+		EXTRA_CFLAGS="${build_cflags}" \
 		LDFLAGS="${build_ldflags}" \
 		CONFIG_PREFIX="${DIR_ERG}/targetfs"
 
-	make ARCH="${arch}" CROSS_COMPILE="${erg_cross}" V=1 \
-		CFLAGS="${build_cflags}" \
+	make ARCH="${arch}" \
+		CROSS_COMPILE="${erg_cross}" V=1 \
+		${MAKEVARS} \
+		EXTRA_CFLAGS="${build_cflags}" \
 		LDFLAGS="${build_ldflags}" \
 		CONFIG_PREFIX="${DIR_ERG}/targetfs" install
 }
 
 function pkg_select_build {
 
-	if [ -e "Makefile" ]; then
+	if [ -e "Makefile" ] && [ ! -e "configure" ]; then
 		pkg_build_makeonly $1
 	else
 		if [ -e "./configure" ]; then
@@ -118,6 +124,9 @@ function pkg_check_and_build {
 	fi
 	if [ ${pkg_name: -8} == ".tar.bz2" ]; then
 		tar -jxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
+	fi
+	if [ ${pkg_name: -7} == ".tar.gz" ]; then
+		tar -zxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
 	fi
 
 	build_cflags="${arch_cflags} ${dist_cflags} ${pkg_cflags}"

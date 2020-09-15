@@ -1,0 +1,47 @@
+diff -rubN iproute2-5.8.0/configure iproute2-5.8.0-2/configure
+--- iproute2-5.8.0/configure	2020-08-03 19:02:47.000000000 +0200
++++ iproute2-5.8.0-2/configure	2020-09-15 15:06:02.261813976 +0200
+@@ -229,15 +229,7 @@
+ 
+ check_elf()
+ {
+-    if ${PKG_CONFIG} libelf --exists; then
+-	echo "HAVE_ELF:=y" >>$CONFIG
+-	echo "yes"
+-
+-	echo 'CFLAGS += -DHAVE_ELF' `${PKG_CONFIG} libelf --cflags` >> $CONFIG
+-	echo 'LDLIBS += ' `${PKG_CONFIG} libelf --libs` >>$CONFIG
+-    else
+ 	echo "no"
+-    fi
+ }
+ 
+ check_selinux()
+@@ -314,15 +306,7 @@
+ 
+ check_cap()
+ {
+-	if ${PKG_CONFIG} libcap --exists; then
+-		echo "HAVE_CAP:=y" >>$CONFIG
+-		echo "yes"
+-
+-		echo 'CFLAGS += -DHAVE_LIBCAP' `${PKG_CONFIG} libcap --cflags` >>$CONFIG
+-		echo 'LDLIBS +=' `${PKG_CONFIG} libcap --libs` >> $CONFIG
+-	else
+ 		echo "no"
+-	fi
+ }
+ 
+ quiet_config()
+diff -rubN iproute2-5.8.0/Makefile iproute2-5.8.0-2/Makefile
+--- iproute2-5.8.0/Makefile	2020-08-03 19:02:47.000000000 +0200
++++ iproute2-5.8.0-2/Makefile	2020-09-15 15:14:15.215129016 +0200
+@@ -55,7 +55,7 @@
+ CFLAGS := $(WFLAGS) $(CCOPTS) -I../include -I../include/uapi $(DEFINES) $(CFLAGS)
+ YACCFLAGS = -d -t -v
+ 
+-SUBDIRS=lib ip tc bridge misc netem genl tipc devlink rdma man
++SUBDIRS=lib ip
+ 
+ LIBNETLINK=../lib/libutil.a ../lib/libnetlink.a
+ LDLIBS += $(LIBNETLINK)

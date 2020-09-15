@@ -1,0 +1,2 @@
+pkg_url="http://people.redhat.com/sgrubb/libcap-ng/libcap-ng-${pkg_ver}.tar.gz"
+export pkg_cflags="-static"

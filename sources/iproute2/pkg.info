@@ -1,4 +1,4 @@
 pkg_url="https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-${pkg_ver}.tar.xz"
-export PKG_CFLAGS="-static"
-export PKG_LDFLAGS="-static"
+export pkg_cflags="-I${DIR_ERG}/targetfs/usr/include -static -DNO_SHARED_LIBS -UHAVE_LIBCAP -UHAVE_ELF"
+export pkg_ldflags="-L${DIR_ERG}/targetfs/usr/lib -static"
 export MAKEVARS="DESTDIR=${DIR_ERG}/targetfs SHARED_LIBS=n"
