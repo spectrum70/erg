@@ -2,6 +2,8 @@
 # Sysam ERG - embedded rootfs generator
 # Angelo Dureghello (C) 2020
 
+set -e
+
 source scripts/lib/messages.sh
 source scripts/lib/packages.sh
 
@@ -94,6 +96,7 @@ case "$c" in
 	arch=m68k
 	target_host=m68k-linux
 	arch_cflags="-mcpu=54418"
+	arch_ldflags=""
 	list=${DIR_PKG_LST}/pkgs-stmark2.list
 	flat=0
 	;;

@@ -1,4 +1,4 @@
-# erg lib - packegess.sh
+# erg lib - packages.sh
 
 function pkg_apply_patches {
 	sources_dir=${DIR_ERG}/sources/$1
@@ -35,6 +35,8 @@ function pkg_build_makeonly {
 
 	pkg_apply_patches ${1}
 
+	unset pkg_makevars
+
 	inf "package [${1}]: building ..."
 
 	export CC=${erg_cross}gcc
@@ -44,12 +46,14 @@ function pkg_build_makeonly {
 	echo "CC=${erg_cross}gcc" >> Config
 	echo "AR=${erg_cross}ar" >> Config
 	echo "CFLAGS+=${build_cflags}" >> Config
-	echo "LDFLAGS+=${build_cflags}" >> Config
+	echo "LDFLAGS+=${build_ldlags}" >> Config
 
 	make ARCH="${arch}" CROSS_COMPILE="${erg_cross}" CC=${erg_cross}gcc \
-		EXTRA_CFLAGS="${build_cflags}" EXTRA_LDFLAGS="${build_ldflags}" \
+		CFLAGS="${build_cflags}" LDFLAGS="${build_ldflags}" \
 		V=1 SKIP_STRIP="y" \
-		CONFIG_PREFIX="${DIR_ERG}/targetfs" ${MAKEVARS} install
+		PREFIX="${DIR_ERG}/targetfs/usr" \
+		CONFIG_PREFIX="${DIR_ERG}/targetfs" \
+		${pkg_makevars} install
 }
 
 function pkg_configure_classic {
@@ -63,6 +67,11 @@ function pkg_configure_classic {
 
 	pkg_apply_patches ${1}
 
+	dbg "./configure --host=${target_host} \
+			--target=${target_host} \
+			--prefix=${DIR_ERG}/targetfs/usr \
+			${pkg_confopts}"
+
 	./configure --host=${target_host} \
 			--target=${target_host} \
 			--prefix=${DIR_ERG}/targetfs/usr \
@@ -72,28 +81,36 @@ function pkg_configure_classic {
 	echo "CC=${erg_cross}gcc" >> Config
 	echo "AR=${erg_cross}ar" >> Config
 	echo "CFLAGS+=${build_cflags}" >> Config
-	echo "LDFLAGS+=${build_cflags}" >> Config
+	echo "LDFLAGS+=${build_ldlags}" >> Config
 
 	inf "package [${1}]: building ..."
 
 	make ARCH="${arch}" \
 		CROSS_COMPILE="${erg_cross}" V=1 \
-		${MAKEVARS} \
-		EXTRA_CFLAGS="${build_cflags}" \
-		LDFLAGS="${build_ldflags}" \
+		${pkg_makevars} \
+		CFLAGS="${build_cflags}" \
+		LDFLAGS="${build_ldflags} ${arch_ldflags}" \
 		CONFIG_PREFIX="${DIR_ERG}/targetfs"
 
 	make ARCH="${arch}" \
 		CROSS_COMPILE="${erg_cross}" V=1 \
-		${MAKEVARS} \
-		EXTRA_CFLAGS="${build_cflags}" \
+		${pkg_makevars} \
+		CFLAGS="${build_cflags}" \
 		LDFLAGS="${build_ldflags}" \
 		CONFIG_PREFIX="${DIR_ERG}/targetfs" install
 }
 
 function pkg_select_build {
 
-	if [ -e "Makefile" ] && [ ! -e "configure" ]; then
+	if [ -e "autogen.sh" ]; then
+		./autogen.sh
+	else
+		if [ ! -e "configure" ] && [ -e "configure.ac" ]; then
+			inf "autoreconf ..."
+			./autoreconf -fi
+		fi
+	fi
+	if { [ -e "Makefile" ] || [ -e "makefile" ]; } && [ ! -e "configure" ]; then
 		pkg_build_makeonly $1
 	else
 		if [ -e "./configure" ]; then
@@ -104,6 +121,12 @@ function pkg_select_build {
 
 function pkg_check_and_build {
 	pkg=$1
+
+	# unset here all pkg-related involved exports
+	unset pkg_cflags
+	unset pkg_ldflags
+	unset pkg_confopts
+	unset pkg_makevars
 
 	source sources/${pkg}/pkg.info
 

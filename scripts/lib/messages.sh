@@ -15,6 +15,10 @@ function msg {
 	echo -e "\x1b[;1m"$1"\x1b[0m"
 }
 
+function dbg {
+        echo -e "\x1b[36;1m"$1"\x1b[0m"
+}
+
 function welcome {
 	echo
 	echo -e "\x1b[35;1mHello, welcome to erg !\x1b[0m"
