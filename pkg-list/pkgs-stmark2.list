@@ -4,4 +4,4 @@
 busybox 1.28.1
 libmnl 1.0.3
 iproute2 5.8.0
-can-utils 2020.11.0
+can-etools 0.90

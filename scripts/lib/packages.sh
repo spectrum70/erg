@@ -107,7 +107,7 @@ function pkg_select_build {
 	else
 		if [ ! -e "configure" ] && [ -e "configure.ac" ]; then
 			inf "autoreconf ..."
-			./autoreconf -fi
+			autoreconf -fi
 		fi
 	fi
 	if { [ -e "Makefile" ] || [ -e "makefile" ]; } && [ ! -e "configure" ]; then
@@ -133,23 +133,31 @@ function pkg_check_and_build {
 	pkg_name=${pkg_url##*/}
 	pkg_dir=${DIR_BUILD}/${pkg_name%.*.*}
 
-	if [ ! -e ${DIR_DL}/${pkg_name} ]; then
-		wget ${pkg_url} --directory-prefix=${DIR_DL}
-	fi
 	if [ -e ${pkg_dir} ]; then
 		rm -rf ${pkg_dir}
-	fi
+        fi
 
-	inf "package [${pkg}]: extracting ..."
+	if [ "${pkg_url:0:4}" == "git@" ]; then
+		if [ -e ${DIR_BUILD}/${pkg_name} ]; then
+			rm -rf ${DIR_BUILD}/${pkg_name}
+		fi
+		git clone --branch ${pkg_git_branch} ${pkg_url} ${DIR_BUILD}/${pkg_name}
+	else
+		if [ ! -e ${DIR_DL}/${pkg_name} ]; then
+			wget ${pkg_url} --directory-prefix=${DIR_DL}
+		fi
 
-	if [ ${pkg_name: -7} == ".tar.xz" ]; then
-		tar -xxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
-	fi
-	if [ ${pkg_name: -8} == ".tar.bz2" ]; then
-		tar -jxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
-	fi
-	if [ ${pkg_name: -7} == ".tar.gz" ]; then
-		tar -zxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
+		inf "package [${pkg}]: extracting ..."
+
+		if [ ${pkg_name: -7} == ".tar.xz" ]; then
+			tar -xxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
+		fi
+		if [ ${pkg_name: -8} == ".tar.bz2" ]; then
+			tar -jxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
+		fi
+		if [ ${pkg_name: -7} == ".tar.gz" ]; then
+			tar -zxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
+		fi
 	fi
 
 	build_cflags="${arch_cflags} ${dist_cflags} ${pkg_cflags}"
