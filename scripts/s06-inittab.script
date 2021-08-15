@@ -14,5 +14,6 @@ chmod 755 ${DIR_ERG}/targetfs/etc/rc.d/startup
 cat > ${DIR_ERG}/targetfs/etc/inittab<< "EOF"
 # /etc/inittab
 ::sysinit:/bin/sh /etc/rc.d/startup
-ttyS0::respawn:-/bin/sh
 EOF
+
+echo "${console}::respawn:-/bin/sh" >> ${DIR_ERG}/targetfs/etc/inittab

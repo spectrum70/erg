@@ -7,7 +7,7 @@ set -e
 source scripts/lib/messages.sh
 source scripts/lib/packages.sh
 
-go_version=0.9.6
+go_version=0.9.7
 
 export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
 export INITRAMFS="../erg/targetfs"
@@ -34,16 +34,22 @@ function build_checks {
 function usage {
 	echo "go.sh, erg build system helper v." ${go_version}
 	echo "Angelo Dureghello (C) sysam.it 2019, 2020"
-	echo "Usage: ./go.sh [option]"
+	echo "Usage: ./go.sh config [option]"
 	echo "Options: -h --help      shows this help"
 	echo "         -k --kernel    build kernel and modules"
 	echo "         -c --config    force busybox reconfig"
+	echo "Example:"
+	echo "         ./go.sh stmak2"
 	exit 1
 }
 
+if [ $# -gt 2 ]; then
+	usage
+fi
+
 options=$(getopt -n "$0" -o hkc --long "help,kernel,config"  -- "$@")
 
-if [ $? -ne 0 ]; then exit 1; fi
+if [ $? -ne 0 ]; then usage; fi
 
 # A little magic, necessary when using getopt.
 eval set -- "$options"
@@ -54,49 +60,67 @@ do
 	-h | --help)
 		usage
 		;;
-	--k | --kernel)
+	-k | --kernel)
 		build_kernel=1
+		shift
 		break;;
-	--c | --config)
+	-c | --config)
 		busybox_reconf=1
+		shift
 		break;;
 	--)
-		shift
 		break;;
 	esac
 done
 
+shift $(($OPTIND - 1))
+cfg=$2
+
+if [ "${cfg}" == "" ]; then
+	echo "configuration missing"
+	usage
+fi
+
 source ./version
+source boards/${cfg}
 
 welcome
+
+list=${DIR_PKG_LST}/pkgs-${cfg}.list
 
 msg "Please select a configuration ..."
 echo
 echo "n. ARCH  CPU/SoC   binary"
 echo
-echo "1. m68k  mcf54415  flat    (-mcpu=54418)"
-echo "2. m68k  mcf5307   flat    (-mcpu=5307,-m5307)"
-echo "3. m68k  mcf54415  elf     (-mcpu=54418)"
+echo "1. arm   v7-32bit  elf"
+echo "2. m68k  mcf54415  flat    (-mcpu=54418)"
+echo "3. m68k  mcf5307   flat    (-mcpu=5307,-m5307)"
+echo "4. m68k  mcf54415  elf     (-mcpu=54418)"
 read -s -n 1 c
 
 case "$c" in
 	1)
-	arch=m68k
-	target_host=m68k-linux
-	arch_cflags="-mcpu=54418"
-	flat=1
+	arch=arm
+	target_host=arm-linux
 	;;
 	2)
 	arch=m68k
 	target_host=m68k-linux
-	arch_cflags="-mcpu=5307,-m5307"
+	arch_cflags="-mcpu=54418"
 	flat=1
 	;;
 	3)
 	arch=m68k
 	target_host=m68k-linux
-	arch_cflags="-mcpu=54418"
-	arch_ldflags=""
+	arch_cflags="-mcpu=5307,-m5307"
+	flat=1
+	;;
+	4)
+	arch=m68k
+	target_host=m68k-linux
+	arch_cflags="-mcpu=54415 -static"
+	arch_ldflags="-mcpu=54415 -static"
+	arch_confopts="--enable-static --disable-shared"
 	list=${DIR_PKG_LST}/pkgs-stmark2.list
 	flat=0
 	;;

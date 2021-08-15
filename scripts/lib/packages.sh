@@ -70,12 +70,12 @@ function pkg_configure_classic {
 	dbg "./configure --host=${target_host} \
 			--target=${target_host} \
 			--prefix=${DIR_ERG}/targetfs/usr \
-			${pkg_confopts}"
+			${arch_confpts} ${pkg_confopts}"
 
 	./configure --host=${target_host} \
 			--target=${target_host} \
 			--prefix=${DIR_ERG}/targetfs/usr \
-			${pkg_confopts}
+			${arch_confopts} ${pkg_confopts}
 
 	# Other packages may need this
 	echo "CC=${erg_cross}gcc" >> Config
@@ -84,12 +84,14 @@ function pkg_configure_classic {
 	echo "LDFLAGS+=${build_ldlags}" >> Config
 
 	inf "package [${1}]: building ..."
+	inf "package [${1}]: build_cflags  : ${build_cflags}"
+	inf "package [${1}]: build_ldflags : ${build_ldflags}"
 
 	make ARCH="${arch}" \
 		CROSS_COMPILE="${erg_cross}" V=1 \
 		${pkg_makevars} \
 		CFLAGS="${build_cflags}" \
-		LDFLAGS="${build_ldflags} ${arch_ldflags}" \
+		LDFLAGS="${build_ldflags}" \
 		CONFIG_PREFIX="${DIR_ERG}/targetfs"
 
 	make ARCH="${arch}" \
@@ -161,12 +163,14 @@ function pkg_check_and_build {
 	fi
 
 	build_cflags="${arch_cflags} ${dist_cflags} ${pkg_cflags}"
-	build_ldflags="${build_cflags} ${pkg_ldflags}"
-
-	# Some special packages as Busybox uses .config / menuconfig
-	pkg_handle_menuconfig ${pkg} ${pkg_dir}
+	build_ldflags="${arch_ldflags} ${dist_ldflags} ${pkg_ldflags}"
 
 	cd ${pkg_dir}
+
+	# Some special packages as Busybox uses .config / menuconfig
+	export TERM=vt100
+	pkg_handle_menuconfig ${pkg} ${pkg_dir}
+
 	pkg_select_build ${pkg}
 	cd -
 }
@@ -176,15 +180,27 @@ function pkg_build() {
 }
 
 function pkg_build_pkg_list {
+
+	list_name=("")
+	list_ver=("")
+
 	while IFS= read -r line; do
 		# Skip comments
 		line=$(sed 's/#.*$//g' <<< ${line})
-		IFS=$'\t ' read -r -a arr <<<"$line"
-		export pkg_name="${arr[0]}"
-		export pkg_ver="${arr[1]}"
-		if [ -n "${pkg_name}" ] && [ -n "${pkg_ver}" ]; then
-			printf "%s:%s\n" "${pkg_name}" "${pkg_ver}"
-			pkg_build ${pkg_name}
+		if [ -n "${line}" ]; then
+			IFS=$'\t ' read -r -a arr <<<"$line"
+			list_name+=(${arr[0]})
+			list_ver+=(${arr[1]})
 		fi
 	done < ${1}
+
+	# A second loop for package processing is needed
+	for i in ${!list_name[@]}; do
+		export pkg_name=${list_name[i]}
+		export pkg_ver=${list_ver[i]}
+		if [ -n "${pkg_name}" ] && [ -n "${pkg_ver}" ]; then
+			printf "building %s:%s\n" "${pkg_name}" "${pkg_ver} ..."
+			pkg_build ${pkg_name}
+		fi
+	done
 }

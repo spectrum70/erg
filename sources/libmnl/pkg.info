@@ -1,3 +1,1 @@
 export pkg_url="ftp.netfilter.org/pub/libmnl/libmnl-${pkg_ver}.tar.bz2"
-export pkg_cflags="-static"
-export pkg_ldflags="-static"
