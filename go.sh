@@ -192,8 +192,8 @@ if [ -n "${build_kernel}" ]; then
 	# Kernel time now
 	source scripts/s10-kernel.script
 fi
+
 # Rootfs
 source scripts/s11-rootfs.script
-
 
 msg "All ok, you are done, enjoy."

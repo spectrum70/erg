@@ -1,3 +1,12 @@
 #!/bin/sh
 
+# TODO: actually adding always libc, but may be avoided if all the system
+# is static
 
+if [ "${arch}" == "arm" ]; then
+	msg "Adding libc dynamic libs ..."
+	erg_cross_path=$(dirname "${erg_cross}")
+	sudo cp -a ${erg_cross_path}/../arm-linux-gnueabihf/libc/lib/* targetfs/usr/lib
+	sudo mv targetfs/usr/lib/ld-linux-armhf.* targetfs/lib
+	msg "Adding libc dynamic libs OK"
+fi
