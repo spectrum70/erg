@@ -1,0 +1,6 @@
+pkg_url="https://www.alsa-project.org/files/pub/utils/alsa-utils-${pkg_ver}.tar.bz2"
+export pkg_cflags="-I${DIR_ERG}/targetfs/usr/include -I${DIR_ERG}/targetfs/usr/include/ncursesw"
+export pkg_ldflags="-L${DIR_ERG}/targetfs/usr/lib"
+export pkg_confopts="--exec-prefix=/usr --includedir=${DIR_ERG}/targetfs/usr/include --with-alsa-prefix=${DIR_ERG}/targetfs/usr/lib --with-alsa-inc-prefix=${DIR_ERG}/targetfs/usr/include"
+export pkg_makevars="DESTDIR=${DIR_ERG}/targetfs"
+ 

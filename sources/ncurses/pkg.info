@@ -1,0 +1,2 @@
+pkg_url="https://ftp.gnu.org/gnu/ncurses/ncurses-${pkg_ver}.tar.gz"
+export pkg_confopts="--enable-widec --without-progs --disable-tic-depends --disable-gnat-projects --without-manpages --without-tack"

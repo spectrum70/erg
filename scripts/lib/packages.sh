@@ -67,14 +67,19 @@ function pkg_configure_classic {
 
 	pkg_apply_patches ${1}
 
+	CFLAGS+=${build_cflags}
+	export CFLAGS
+
 	dbg "./configure --host=${target_host} \
 			--target=${target_host} \
 			--prefix=${DIR_ERG}/targetfs/usr \
+			--exec-prefix=${DIR_ERG}/targetfs/usr \
 			${arch_confpts} ${pkg_confopts}"
 
 	./configure --host=${target_host} \
 			--target=${target_host} \
 			--prefix=${DIR_ERG}/targetfs/usr \
+			--exec-prefix=${DIR_ERG}/targetfs/usr \
 			${arch_confopts} ${pkg_confopts}
 
 	# Other packages may need this
@@ -99,7 +104,7 @@ function pkg_configure_classic {
 		${pkg_makevars} \
 		CFLAGS="${build_cflags}" \
 		LDFLAGS="${build_ldflags}" \
-		CONFIG_PREFIX="${DIR_ERG}/targetfs" install
+		install
 }
 
 function pkg_select_build {

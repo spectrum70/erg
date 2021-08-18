@@ -1,0 +1,1 @@
+export pkg_url="https://www.alsa-project.org/files/pub/lib/alsa-lib-${pkg_ver}.tar.bz2"
