@@ -45,8 +45,8 @@ function pkg_build_makeonly {
 	# Other packages may need this
 	echo "CC=${erg_cross}gcc" >> Config
 	echo "AR=${erg_cross}ar" >> Config
-	echo "CFLAGS+=${build_cflags}" >> Config
-	echo "LDFLAGS+=${build_ldlags}" >> Config
+	echo "CFLAGS+= ${build_cflags}" >> Config
+	echo "LDFLAGS+= ${build_ldlags}" >> Config
 
 	make ARCH="${arch}" CROSS_COMPILE="${erg_cross}" CC=${erg_cross}gcc \
 		CFLAGS="${build_cflags}" LDFLAGS="${build_ldflags}" \
@@ -67,7 +67,7 @@ function pkg_configure_classic {
 
 	pkg_apply_patches ${1}
 
-	CFLAGS+=${build_cflags}
+	CFLAGS+=" ${build_cflags}"
 	export CFLAGS
 
 	dbg "./configure --host=${target_host} \
@@ -85,8 +85,8 @@ function pkg_configure_classic {
 	# Other packages may need this
 	echo "CC=${erg_cross}gcc" >> Config
 	echo "AR=${erg_cross}ar" >> Config
-	echo "CFLAGS+=${build_cflags}" >> Config
-	echo "LDFLAGS+=${build_ldlags}" >> Config
+	echo "CFLAGS+= ${build_cflags}" >> Config
+	echo "LDFLAGS+= ${build_ldlags}" >> Config
 
 	inf "package [${1}]: building ..."
 	inf "package [${1}]: build_cflags  : ${build_cflags}"

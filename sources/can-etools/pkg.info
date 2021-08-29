@@ -1,5 +1,6 @@
 pkg_url="git@codeberg.org:spectrum/can-etools.git"
 pkg_git_branch="master"
 export pkg_cflags="-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wold-style-definition -std=gnu99 -Wmissing-declarations -Wold-style-definition -Wformat=2"
-export pkg_confopts=""
 export pkg_makevars="PREFIX=${DIR_ERG}/targetfs"
+
+#export CC=/opt/toolchains/m68k/m68k-openadk-linux-uclibc/toolchain_generic-m68k_uclibc-ng_cf54415/usr/bin/m68k-openadk-linux-uclibc-gcc
