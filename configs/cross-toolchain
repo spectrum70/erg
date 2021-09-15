@@ -2,6 +2,6 @@
 # m68k flat
 # export erg_cross=/opt/toolchains/m68k/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-
 # arm elf
-# export erg_cross=/opt/toolchains/arm/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+export erg_cross=/opt/toolchains/arm/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 # m68k elf
-export erg_cross=/opt/toolchains/m68k/m68k-openadk-linux-uclibc/toolchain_generic-m68k_uclibc-ng_cf54415/usr/bin/m68k-openadk-linux-uclibc-
+# export erg_cross=/opt/toolchains/m68k/m68k-openadk-linux-uclibc/toolchain_generic-m68k_uclibc-ng_cf54415/usr/bin/m68k-openadk-linux-uclibc-

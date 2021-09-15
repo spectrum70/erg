@@ -27,6 +27,8 @@ sudo mknod ${DIR_ERG}/targetfs/dev/mmcblk0p4 b 179 4
 sudo mknod -m 666 ${DIR_ERG}/targetfs/dev/zero c 1 5
 sudo mknod -m 666 ${DIR_ERG}/targetfs/dev/random c 1 8
 sudo mknod -m 666 ${DIR_ERG}/targetfs/dev/urandom c 1 9
+sudo mkdir ${DIR_ERG}/targetfs/dev/input
+sudo mknod ${DIR_ERG}/targetfs/dev/input/event0 c 13 64
 
 sudo ln -s ./ram0 ${DIR_ERG}/targetfs/dev/ram
 
