@@ -37,7 +37,7 @@ function pkg_build_makeonly {
 
 	unset pkg_makevars
 
-	inf "package [${1}]: building ..."
+	inf "package [${1}]: makeonly ..."
 
 	export CC=${erg_cross}gcc
 	export AR=${erg_cross}ar
@@ -132,6 +132,7 @@ function pkg_check_and_build {
 	unset pkg_ldflags
 	unset pkg_confopts
 	unset pkg_makevars
+	unset pkg_name_override
 
 	source sources/${pkg}/pkg.info
 
@@ -211,7 +212,7 @@ function pkg_build_pkg_list {
 		export pkg_name=${list_name[i]}
 		export pkg_ver=${list_ver[i]}
 		if [ -n "${pkg_name}" ] && [ -n "${pkg_ver}" ]; then
-			printf "building %s:%s\n" "${pkg_name}" "${pkg_ver} ..."
+			# printf "building %s:%s\n" "${pkg_name}" "${pkg_ver} ..."
 			pkg_build ${pkg_name}
 		fi
 	done
@@ -230,7 +231,7 @@ function pkg_set {
 			export pkg_name=${list_name[i]}
 			export pkg_ver=${list_ver[i]}
 			if [ -n "${pkg_name}" ] && [ -n "${pkg_ver}" ]; then
-				printf "building %s:%s\n" "${pkg_name}" "${pkg_ver} ..."
+				# printf "building %s:%s\n" "${pkg_name}" "${pkg_ver} ..."
 				pkg_build ${pkg_name}
 			fi
 			break
