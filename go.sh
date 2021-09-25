@@ -116,7 +116,6 @@ step_done
 
 step "Reading configurations ..."
 source ./configs/hostname
-source ./configs/board-support
 step_done
 
 step "Preparing targetfs tree ... "
