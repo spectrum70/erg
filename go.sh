@@ -19,7 +19,6 @@ DIR_CFG=./configs
 DIR_SRC_CFG=${DIR_CFG}/sources
 DIR_PKG_LST=./pkg-list
 
-
 function build_checks {
 	inf "preparing for building ..."
 
@@ -43,7 +42,7 @@ function usage {
 	exit 1
 }
 
-if [ $# -gt 2 ]; then
+if [ $# -gt 3 ]; then
 	usage
 fi
 
@@ -74,7 +73,9 @@ do
 done
 
 shift $(($OPTIND - 1))
+
 cfg=$2
+package=$3
 
 if [ "${cfg}" == "" ]; then
 	echo "configuration missing"
@@ -92,6 +93,7 @@ unset arch_confopts
 
 source ./version
 welcome $go_version
+echo
 
 if [ ! -e boards/${cfg} ]; then
 	err "board config missing, exiting."
@@ -106,15 +108,15 @@ list=${DIR_PKG_LST}/pkgs-${cfg}.list
 
 display_conf
 
-read -n 1 -r -s -p $'\nPress enter to start\n'
+read -n 1 -r -s -p $'\npress a key to start\n'
 
 echo
 
-step "Setting up environment ... "
+step "setting up environment ... "
 source ./configs/environment
 step_done
 
-step "Reading configurations ..."
+step "reading configurations ..."
 source ./configs/hostname
 step_done
 
@@ -122,31 +124,31 @@ step "Preparing targetfs tree ... "
 sudo rm -r -f targetfs
 step_done
 
-step "Creating directories ... "
+step "creating directories ... "
 source scripts/s01-create-dirs.script
 step_done
 
-step "Creating users, groups, passwd ... "
+step "creating users, groups, passwd ... "
 source scripts/s02-groups-passwd.script
 step_done
 
-step "Creating profile ... "
+step "creating profile ... "
 source scripts/s05-profile.script
 step_done
 
-step "Creating inittab ... "
+step "creating inittab ... "
 source scripts/s06-inittab.script
 step_done
 
-step "Setting hostname ... "
+step "setting hostname ... "
 source scripts/s07-hostname.script
 step_done
 
-step "Creating devices ... "
+step "creating devices ... "
 source scripts/s08-devices.script
 step_done
 
-step "Copying extra files ... "
+step "copying extra files ... "
 source scripts/s09-extra.script
 step_done
 
@@ -154,17 +156,24 @@ echo
 
 export ARCH=${arch}
 
-msg "Building packages ..."
+build_checks
+
+if [ "x${package}" != "x" ]; then
+	msg "building ${package}..."
+	pkg_set ${list} ${package}
+	exit 0
+fi
+
+msg "building packages ..."
 
 if [ -z "${list}" ]; then
 	err "package list not defined, exiting ..."
 fi
 
-build_checks
 pkg_build_pkg_list ${list}
 
 if [ -n "${build_kernel}" ]; then
-	msg "Building kernel ..."
+	msg "building kernel ..."
 	# Kernel time now
 	source scripts/s10-kernel.script
 fi
@@ -172,4 +181,4 @@ fi
 # Rootfs
 source scripts/s11-rootfs.script
 
-msg "All ok, you are done, enjoy."
+msg "all ok, you are done, enjoy"

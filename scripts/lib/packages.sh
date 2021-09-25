@@ -69,6 +69,8 @@ function pkg_configure_classic {
 
 	CFLAGS+=" ${build_cflags}"
 	export CFLAGS
+	LDFLAGS+=" ${build_ldflags}"
+        export LDFLAGS
 
 	dbg "./configure --host=${target_host} \
 			--target=${target_host} \
@@ -95,15 +97,11 @@ function pkg_configure_classic {
 	make ARCH="${arch}" \
 		CROSS_COMPILE="${erg_cross}" V=1 \
 		${pkg_makevars} \
-		CFLAGS="${build_cflags}" \
-		LDFLAGS="${build_ldflags}" \
 		CONFIG_PREFIX="${DIR_ERG}/targetfs"
 
 	make ARCH="${arch}" \
 		CROSS_COMPILE="${erg_cross}" V=1 \
 		${pkg_makevars} \
-		CFLAGS="${build_cflags}" \
-		LDFLAGS="${build_ldflags}" \
 		install
 }
 
@@ -142,7 +140,7 @@ function pkg_check_and_build {
 
 	if [ -e ${pkg_dir} ]; then
 		rm -rf ${pkg_dir}
-        fi
+	fi
 
 	if [ "${pkg_url:0:4}" == "git@" ]; then
 		if [ -e ${DIR_BUILD}/${pkg_name} ]; then
@@ -171,7 +169,7 @@ function pkg_check_and_build {
 	build_cflags="${arch_cflags} ${dist_cflags} ${pkg_cflags}"
 	build_ldflags="${arch_ldflags} ${dist_ldflags} ${pkg_ldflags}"
 
-	if [ ${pkg_name_override} != "" ]; then
+	if [ "x${pkg_name_override}" != "x" ]; then
 		cd ${DIR_BUILD}/${pkg_name_override}
 	else
 		cd ${pkg_dir}
@@ -189,11 +187,7 @@ function pkg_build() {
 	pkg_check_and_build ${1}
 }
 
-function pkg_build_pkg_list {
-
-	list_name=("")
-	list_ver=("")
-
+function pkg_populate_lists {
 	while IFS= read -r line; do
 		# Skip comments
 		line=$(sed 's/#.*$//g' <<< ${line})
@@ -203,6 +197,14 @@ function pkg_build_pkg_list {
 			list_ver+=(${arr[1]})
 		fi
 	done < ${1}
+}
+
+function pkg_build_pkg_list {
+
+	list_name=("")
+	list_ver=("")
+
+	pkg_populate_lists ${1}
 
 	# A second loop for package processing is needed
 	for i in ${!list_name[@]}; do
@@ -211,6 +213,27 @@ function pkg_build_pkg_list {
 		if [ -n "${pkg_name}" ] && [ -n "${pkg_ver}" ]; then
 			printf "building %s:%s\n" "${pkg_name}" "${pkg_ver} ..."
 			pkg_build ${pkg_name}
+		fi
+	done
+}
+
+function pkg_set {
+
+	list_name=("")
+	list_ver=("")
+
+	pkg_populate_lists ${1}
+
+	# A second loop for package processing is needed
+	for i in ${!list_name[@]}; do
+		if [ "x${list_name[i]}" == "x${2}" ]; then
+			export pkg_name=${list_name[i]}
+			export pkg_ver=${list_ver[i]}
+			if [ -n "${pkg_name}" ] && [ -n "${pkg_ver}" ]; then
+				printf "building %s:%s\n" "${pkg_name}" "${pkg_ver} ..."
+				pkg_build ${pkg_name}
+			fi
+			break
 		fi
 	done
 }

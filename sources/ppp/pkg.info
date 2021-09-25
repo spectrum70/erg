@@ -1,4 +1,6 @@
 export pkg_url="https://github.com/ppp-project/ppp/archive/refs/tags/ppp-${pkg_ver}.tar.gz"
 export pkg_confopts=--with-pcap=linux
 export pkg_name_override="ppp-ppp-${pkg_ver}"
-#export pkg_extracflags="-Os -I. -I.. -I../.. -I${DIR_ERG}/targetfs/usr/include -pipe -I../include -DDESTDIR=\\\"/home/angelo/dev-sysam/erg/targetfs/usr\\\""
+export pkg_makevars="DESTDIR=/home/angelo/dev-sysam/erg/targetfs/usr"
+
+mkdir -p ${DIR_ERG}/targetfs/usr/share/man/man8

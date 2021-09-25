@@ -1,23 +1,32 @@
 diff -Naur ppp-ppp-2.4.9/pppd/Makefile.linux ppp-ppp-2.4.9.1/pppd/Makefile.linux
 --- ppp-ppp-2.4.9/pppd/Makefile.linux	2021-01-05 00:06:37.000000000 +0100
-+++ ppp-ppp-2.4.9.1/pppd/Makefile.linux	2021-09-25 08:05:56.147732431 +0200
++++ ppp-ppp-2.4.9.1/pppd/Makefile.linux	2021-09-25 21:02:58.306108940 +0200
 @@ -38,13 +38,13 @@
  
  # Uncomment the next line to include support for Microsoft's
  # MS-CHAP authentication protocol.  Also, edit plugins/radius/Makefile.linux.
 -CHAPMS=y
-+# CHAPMS=y
++#CHAPMS=y
  #USE_CRYPT=y
  # Don't use MSLANMAN unless you really know what you're doing.
  #MSLANMAN=y
  # Uncomment the next line to include support for MPPE.  CHAPMS (above) must
  # also be enabled.  Also, edit plugins/radius/Makefile.linux.
 -MPPE=y
-+# MPPE=y
++#MPPE=y
  
  # Uncomment the next line to include support for PPP packet filtering.
  # This requires that the libpcap library and headers be installed
-@@ -85,7 +85,7 @@
+@@ -66,7 +66,7 @@
+ # pppd will not detach and will notify systemd when up.
+ #SYSTEMD=y
+ 
+-HAS_SHADOW=y
++#HAS_SHADOW=y
+ #USE_PAM=y
+ HAVE_INET6=y
+ 
+@@ -85,15 +85,18 @@
  endif
  
  # Enable EAP-TLS authentication (requires MPPE support, libssl and libcrypto)
@@ -26,3 +35,14 @@ diff -Naur ppp-ppp-2.4.9/pppd/Makefile.linux ppp-ppp-2.4.9.1/pppd/Makefile.linux
  
  MAXOCTETS=y
  
+ INCLUDE_DIRS= -I../include
++CFLAGS += -I$(DESTDIR)/include
+ 
+ COMPILE_FLAGS= -DHAVE_PATHS_H -DIPX_CHANGE -DHAVE_MMAP -pipe
+ 
+ CFLAGS= $(COPTS) $(COMPILE_FLAGS) $(INCLUDE_DIRS) '-DDESTDIR="@DESTDIR@"'
++CFLAGS+= -I@DESTDIR@/include
++LDFLAGS=-L@DESTDIR@/lib
+ 
+ ifdef CHAPMS
+ CFLAGS   += -DCHAPMS=1

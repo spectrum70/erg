@@ -29,7 +29,7 @@ function welcome {
 }
 
 function display_conf {
-	printf "\x1b[32;1mBoard-specific variables:\n"
+	printf "\x1b[32;1mboard: \x1b[34;1m${cfg}\n"
 	if [ "x${erg_cross}" == "x" ]; then
 		printf "\x1b[31;1mcross toolchain path not set, exiting.\n"
 		exit 1
