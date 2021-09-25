@@ -1,0 +1,4 @@
+export pkg_url="git@gitlab.com:spectrum70/red.git"
+export pkg_git_branch="master"
+export pkg_cflags="-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wold-style-definition -std=gnu99 -Wmissing-declarations -Wold-style-definition -Wformat=2"
+export pkg_makevars="PREFIX=${DIR_ERG}/targetfs"
