@@ -7,7 +7,7 @@ set -e
 source scripts/lib/messages.sh
 source scripts/lib/packages.sh
 
-go_version=0.9.7
+go_version=0.9.8
 
 export CMD_LINE="console=ttyS0,115200 root=/dev/ram0 rw rootfstype=ramfs rdinit=/sbin/init devtmpfs.mount=1"
 export INITRAMFS="../erg/targetfs"
@@ -81,54 +81,32 @@ if [ "${cfg}" == "" ]; then
 	usage
 fi
 
+# Cleanup
+unset erg_cross
+unset erg_hostname
+unset target_host
+unset arch
+unset arch_cflags
+unset arch_ldflags
+unset arch_confopts
+
 source ./version
+welcome $go_version
+
+if [ ! -e boards/${cfg} ]; then
+	err "board config missing, exiting."
+fi
+
+if [ ! -e ${DIR_PKG_LST}/pkgs-${cfg}.list ]; then
+	err "board package list missing, exiting."
+fi
+
 source boards/${cfg}
-
-welcome
-
 list=${DIR_PKG_LST}/pkgs-${cfg}.list
 
-msg "Please select a configuration ..."
-echo
-echo "n. ARCH  CPU/SoC   binary"
-echo
-echo "1. arm   v7-32bit  elf"
-echo "2. m68k  mcf54415  flat    (-mcpu=54418)"
-echo "3. m68k  mcf5307   flat    (-mcpu=5307,-m5307)"
-echo "4. m68k  mcf54415  elf     (-mcpu=54418)"
-read -s -n 1 c
+display_conf
 
-case "$c" in
-	1)
-	arch=arm
-	target_host=arm-linux
-	;;
-	2)
-	arch=m68k
-	target_host=m68k-linux
-	arch_cflags="-mcpu=54418"
-	flat=1
-	;;
-	3)
-	arch=m68k
-	target_host=m68k-linux
-	arch_cflags="-mcpu=5307,-m5307"
-	flat=1
-	;;
-	4)
-	arch=m68k
-	target_host=m68k-linux
-	arch_cflags="-mcpu=54415 -static"
-	arch_ldflags="-mcpu=54415 -static"
-	arch_confopts="--enable-static --disable-shared"
-	list=${DIR_PKG_LST}/pkgs-stmark2.list
-	flat=0
-	;;
-	*)
-	echo "not still implemented"
-	exit 1
-	;;
-esac
+read -n 1 -r -s -p $'\nPress enter to start\n'
 
 echo
 
@@ -137,13 +115,12 @@ source ./configs/environment
 step_done
 
 step "Reading configurations ..."
-source ./configs/cross-toolchain
 source ./configs/hostname
 source ./configs/board-support
 step_done
 
 step "Preparing targetfs tree ... "
-rm -r -f targetfs
+sudo rm -r -f targetfs
 step_done
 
 step "Creating directories ... "

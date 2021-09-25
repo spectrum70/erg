@@ -1,0 +1,2 @@
+export pkg_url="https://www.tcpdump.org/release/libpcap-${pkg_ver}.tar.gz"
+export pkg_ldflags="-L${DIR_ERG}/targetfs/usr/lib"

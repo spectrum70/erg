@@ -21,10 +21,32 @@ function dbg {
 
 function welcome {
 	echo
-	echo -e "\x1b[35;1mHello, welcome to erg !\x1b[0m"
-	echo -e "\x1b[;1merg v.${erg_version} " \
-		"Copyright (C) 2017 Angelo Dureghello - Sysam\x1b[0m"
+	printf "\x1b[33;1mHello, welcome to erg !\n"
+	printf "*** erg v.${erg_version}\n"
+	printf "*** go v.${1}\n"
+	printf "Copyright (C) 2017 Angelo Dureghello - Sysam\x1b[0m"
 	echo
+}
+
+function display_conf {
+	printf "\x1b[32;1mBoard-specific variables:\n"
+	if [ "x${erg_cross}" == "x" ]; then
+		printf "\x1b[31;1mcross toolchain path not set, exiting.\n"
+		exit 1
+	fi
+	cross_name=$(basename ${erg_cross})
+	printf "\x1b[32;1mcross-toolchain: \x1b[34;1m${cross_name}\n"
+	if [ "x${erg_hostname}" == "x" ]; then
+		export erg_hostname = "erg"
+	fi
+	printf "\x1b[32;1mtarget hostname: \x1b[34;1m${erg_hostname}\n"
+	printf "\x1b[32;1march: \x1b[34;1m${arch}\n"
+	printf "\x1b[32;1march_cflags: \x1b[34;1m${arch_cflags}\n"
+	printf "\x1b[32;1march_ldflags: \x1b[34;1m${arch_ldflags}\n"
+	printf "\x1b[32;1march_confopts: \x1b[34;1m${arch_confopts}\n"
+	printf "\x1b[32;1mtarget-host: \x1b[34;1m${target_host}\n"
+	printf "\x1b[32;1mconsole: \x1b[34;1m${console}\n"
+	printf "\x1b[33;1m"
 }
 
 function step {

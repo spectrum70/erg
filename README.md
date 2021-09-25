@@ -1,33 +1,74 @@
-Sysam Italia
+Sysam - Trieste, Italy
+
 
      erg - embedded rootfs generator
 
-Copyright (C) Sysam.it 2020 - Angelo Dureghello
+
+Provided under the terms of the GNU General Public License v2.0 or later,
+as provided in LICENSES/GPL-2.0-or-later.
+
+Copyright (C) Sysam.it 2021 - Angelo Dureghello
 
 
-This minimalized distribution is intended to be used on embedded 
-systems as a very basic rootfs generator, started up for no-mmu 
-processors as i.e. the ColdFire serie, but with ambition to be expanded
-to other architectures. 
+
+Index
+
+1. Quick start
+   1.1. Create a board configuration
+   1.2. Setup build variables
+   1.3. Create package list
+   1.4. Build
+2. Introduction
+3. Credits
+
 
 1. Quick start
 
-./go.sh
+1.1. Create a board configuration
 
-An interactive menu will ask architecture and SoC/cpu tu build for.
+Create a configuraiton file "boards/yourboard", or check/duplicate the
+boards/example configuration.
 
-2. Setup
+1.2. Setup build variables
 
-Cross toolchain path is actually manually set in configs/cross-toolchain..
-Use crosstools-ng to create your own toolchain.
-Other useful things can be set manually over configs/ files.
+In the board config file, setup at least:
 
-3. Packages
+  erg_cross
+  target_host
+  arch
 
-A part cor current special case of busybox, all other packages details
-needs to be added in sources folder, as .info details.
+For other available variables please check boards/example.
+
+1.3. Create package list
+
+Check/copy some existing package list in /pkg-list directory.
+Note, available packages are visible in the sources directory. Missing
+packages should be created frin time to time,
+
+1.4. Build
+
+./go.sh yourboard
 
 
-4. TO DO
+2. Introduction
 
-Really a lot
+erg (all minor) is a simple rootfs (distribution, if you like it) generator,
+as it means a"embedded rootfs generator". Actually, the cross-toolchain creation
+is delegated to the user, very good tools as ct-ng, or openadk are available,
+due to the fact that building a proper toolchain for the target is an extremly
+long process, and complex too, and is actually not in the aim of this small
+rootfs generator.
+
+
+3. Credits
+
+This small generator is copyright (C) of Angelo Dureghello, Sysam.
+Please provide any feedback to angelo AT kernel-space.org.
+
+Note: now a day (Sept. 2021)
+
+Italy and Isreael seems selected from global non-voted elitarian rulers
+as countries that must suffer hard dictatorial post-covid treatments.
+This as always for mysterious reasons, in a "new normal" world ruled by lies.
+
+In a better day, remember of us, now front-line fighters.

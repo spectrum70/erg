@@ -110,7 +110,7 @@ function pkg_configure_classic {
 function pkg_select_build {
 
 	if [ -e "autogen.sh" ]; then
-		./autogen.sh
+		./autogen.sh ${pkg_autogen_opts}
 	else
 		if [ ! -e "configure" ] && [ -e "configure.ac" ]; then
 			inf "autoreconf ..."
@@ -151,10 +151,11 @@ function pkg_check_and_build {
 		git clone --branch ${pkg_git_branch} ${pkg_url} ${DIR_BUILD}/${pkg_name}
 	else
 		if [ ! -e ${DIR_DL}/${pkg_name} ]; then
-			wget ${pkg_url} --directory-prefix=${DIR_DL}
+			# wget ${pkg_url} --directory-prefix=${DIR_DL}
+			curl --create-dirs -O --output-dir ${DIR_DL} -L ${pkg_url}
 		fi
 
-		inf "package [${pkg}]: extracting ..."
+		inf "package [${pkg}]: extracting [${pkg_name}] ..."
 
 		if [ ${pkg_name: -7} == ".tar.xz" ]; then
 			tar -xxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
@@ -170,7 +171,11 @@ function pkg_check_and_build {
 	build_cflags="${arch_cflags} ${dist_cflags} ${pkg_cflags}"
 	build_ldflags="${arch_ldflags} ${dist_ldflags} ${pkg_ldflags}"
 
-	cd ${pkg_dir}
+	if [ ${pkg_name_override} != "" ]; then
+		cd ${DIR_BUILD}/${pkg_name_override}
+	else
+		cd ${pkg_dir}
+	fi
 
 	# Some special packages as Busybox uses .config / menuconfig
 	export TERM=vt100

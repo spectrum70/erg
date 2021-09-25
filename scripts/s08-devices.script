@@ -32,4 +32,4 @@ sudo mknod ${DIR_ERG}/targetfs/dev/input/event0 c 13 64
 
 sudo ln -s ./ram0 ${DIR_ERG}/targetfs/dev/ram
 
-sudo chown root ${DIR_ERG}/targetfs/dev/*
+sudo chown -R root:root ${DIR_ERG}/targetfs/dev/*
