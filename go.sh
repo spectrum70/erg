@@ -117,7 +117,6 @@ source ./configs/environment
 step_done
 
 step "reading configurations ..."
-source ./configs/hostname
 step_done
 
 step "Preparing targetfs tree ... "
