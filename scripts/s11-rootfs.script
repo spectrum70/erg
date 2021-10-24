@@ -7,6 +7,9 @@ if [ "${arch}" == "arm" ]; then
 	msg "Adding libc dynamic libs ..."
 	erg_cross_path=$(dirname "${erg_cross}")
 	sudo cp -a ${erg_cross_path}/../arm-linux-gnueabihf/libc/lib/* targetfs/usr/lib
+	sudo cp -a ${erg_cross_path}/../arm-linux-gnueabihf/lib/libstdc++.so.6 targetfs/usr/lib
+	sudo cp -a ${erg_cross_path}/../arm-linux-gnueabihf/lib/libgcc_s.so.1 targetfs/usr/lib
+	sudo rm -rf  targetfs/usr/lib/*2.28*
 	sudo mv targetfs/usr/lib/ld-linux-armhf.* targetfs/lib
 	msg "Adding libc dynamic libs OK"
 fi
