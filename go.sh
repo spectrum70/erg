@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Sysam ERG - embedded rootfs generator
 # Angelo Dureghello (C) 2020
 
