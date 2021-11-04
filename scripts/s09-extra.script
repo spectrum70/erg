@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cp -a extra-files/* targetfs
+cp -a extra-files/${cfg}/* targetfs
 

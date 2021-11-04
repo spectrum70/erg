@@ -74,8 +74,8 @@ done
 
 shift $(($OPTIND - 1))
 
-cfg=$2
-package=$3
+export cfg=$2
+export package=$3
 
 if [ "${cfg}" == "" ]; then
 	echo "configuration missing"
