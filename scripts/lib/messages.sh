@@ -21,9 +21,10 @@ function dbg {
 
 function welcome {
 	echo
-	printf "\x1b[33;1mHello, welcome to erg !\n"
-	printf "*** erg v.${erg_version}\n"
-	printf "*** go v.${1}\n"
+	printf "\x1b[33;1mHello, welcome to erg !\n\n"
+	cat logo
+	printf "     erg v.${erg_version}\n"
+	printf "     go  v.${1}\n\n"
 	printf "Copyright (C) 2017 Angelo Dureghello - Sysam\x1b[0m"
 	echo
 }
