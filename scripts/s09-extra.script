@@ -1,4 +1,6 @@
 #!/bin/sh
 
+cp scripts/files/motd targetfs/etc
+
 cp -a extra-files/${cfg}/* targetfs
 

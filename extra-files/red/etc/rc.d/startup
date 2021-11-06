@@ -1,0 +1,6 @@
+/bin/mount -t proc proc /proc
+/bin/mount -t sysfs sysfs /sys
+cat /etc/motd
+
+# start ppp
+/root/ppp.sh
