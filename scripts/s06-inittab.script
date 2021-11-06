@@ -6,6 +6,8 @@ mkdir -p ${DIR_ERG}/targetfs/etc/rc.d
 cat >  ${DIR_ERG}/targetfs/etc/rc.d/startup<< "EOF"
 /bin/mount -t proc proc /proc
 /bin/mount -t sysfs sysfs /sys
+# remove dark blue
+printf %b '\e]4;4;#6495ed\a'
 cat /etc/motd
 EOF
 
