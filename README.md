@@ -29,6 +29,7 @@ Index
 Create a configuraiton file "boards/yourboard", or check/duplicate the
 boards/example configuration.
 
+
 1.2. Setup build variables
 
 In the board config file, setup at least:
@@ -36,6 +37,12 @@ In the board config file, setup at least:
   erg_cross
   target_host
   arch
+
+Optional:
+
+Generate initramfs
+
+  export initramfs=1
 
 For other available variables please check boards/example.
 
@@ -48,6 +55,10 @@ packages should be created frin time to time,
 1.4. Build
 
 ./go.sh yourboard
+
+# build a specific package
+
+./go.sh yourboard pkg
 
 
 2. Introduction

@@ -5,3 +5,5 @@ export arch=arm
 export target_host=arm-linux
 
 export console="ttyS0"
+
+export initramfs=1

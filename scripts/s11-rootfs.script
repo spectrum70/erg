@@ -13,3 +13,22 @@ if [ "${arch}" == "arm" ]; then
 	sudo mv targetfs/usr/lib/ld-linux-armhf.* targetfs/lib
 	msg "Adding libc dynamic libs OK"
 fi
+
+
+if [ "x${initramfs}" == "x1" ]; then
+
+	msg "creating uRamdisk (on $card_dev, from ${ramfs})"
+
+	sudo rm -rf initramfs.* uRamfs ramfs
+
+	msg "creating initramfs ..."
+	cd targetfs; find . | cpio -H newc -o > ../initramfs.cpio
+	cd ..
+	cat initramfs.cpio | gzip > initramfs.cpio.gz
+	rm -rf initramfs.cpio
+	sync
+	msg "creating initramfs done"
+	msg "creating initramfs uRamfs ..."
+	mkimage -A arm -O linux -T ramdisk -C gzip -n 'initramfs image' -d initramfs.cpio.gz uRamfs
+	msg "creating initramfs uRamfs done"
+fi
