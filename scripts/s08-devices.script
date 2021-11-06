@@ -6,7 +6,6 @@ sudo cp -a /dev/ttyS0 ${DIR_ERG}/targetfs/dev/
 sudo cp -a /dev/ttyS1 ${DIR_ERG}/targetfs/dev/
 sudo cp -a /dev/ttyS2 ${DIR_ERG}/targetfs/dev/
 sudo cp -a /dev/ttyS3 ${DIR_ERG}/targetfs/dev/
-sudo cp -a /dev/ttyS4 ${DIR_ERG}/targetfs/dev/
 sudo cp -a /dev/tty1 ${DIR_ERG}/targetfs/dev/
 sudo cp -a /dev/tty2 ${DIR_ERG}/targetfs/dev/
 sudo cp -a /dev/tty3 ${DIR_ERG}/targetfs/dev/
