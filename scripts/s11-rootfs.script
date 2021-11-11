@@ -22,9 +22,10 @@ if [ "x${initramfs}" == "x1" ]; then
 	sudo rm -rf initramfs.* uRamfs ramfs
 
 	msg "creating initramfs ..."
-	cd targetfs; find . | cpio -H newc -o > ../initramfs.cpio
+	fakeroot chown -R root:root targetfs
+	cd targetfs; find . | fakeroot cpio -H newc -o > ../initramfs.cpio
 	cd ..
-	cat initramfs.cpio | gzip > initramfs.cpio.gz
+	cat initramfs.cpio | fakeroot gzip > initramfs.cpio.gz
 	rm -rf initramfs.cpio
 	sync
 	msg "creating initramfs done"
