@@ -7,5 +7,5 @@ killall red 2&>1 /dev/null
 msg "killing red if up [ ok ]"
 
 msg "starting red as a daemon ..."
-red -v --dest-ip=168.254.1.1 &
+/usr/bin/red -v --dest-ip=169.254.1.1 > /var/log/messages 2>&1 &
 msg "starting red as a daemon [ ok ]"
