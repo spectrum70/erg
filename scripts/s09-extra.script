@@ -2,5 +2,6 @@
 
 cp scripts/files/motd targetfs/etc
 
-cp -a extra-files/${cfg}/* targetfs
-
+if [ -e extra-files/${cfg} ]; then
+	cp -a extra-files/${cfg}/* targetfs
+fi
