@@ -38,7 +38,7 @@ function display_conf {
 	cross_name=$(basename ${erg_cross})
 	printf "\x1b[32;1mcross-toolchain: \x1b[34;1m${cross_name}\n"
 	if [ "x${erg_hostname}" == "x" ]; then
-		export erg_hostname = "erg"
+		export erg_hostname="erg"
 	fi
 	printf "\x1b[32;1mtarget hostname: \x1b[34;1m${erg_hostname}\n"
 	printf "\x1b[32;1march: \x1b[34;1m${arch}\n"
