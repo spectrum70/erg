@@ -1,0 +1,6 @@
+export pkg_url="http://tar.gwsocket.io/gwsocket-${pkg_ver}.tar.gz"
+#export pkg_confopts=--with-pcap=linux
+#export pkg_name_override="ppp-ppp-${pkg_ver}"
+export pkg_makevars="DESTDIR=${DIR_ERG}/targetfs/usr"
+
+#mkdir -p ${DIR_ERG}/targetfs/usr/share/man/man8

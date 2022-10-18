@@ -1,0 +1,8 @@
+/bin/mount -t proc proc /proc
+/bin/mount -t sysfs sysfs /sys
+#remove dark blue
+printf %b '\e]4;4;#6495ed\a'
+cat /etc/motd
+
+# start ppp
+/root/ppp.sh

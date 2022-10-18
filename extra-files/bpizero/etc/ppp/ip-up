@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source /root/common.sh
+
+msg "killing zerostress if up ..."
+killall red 2&>1 /dev/null
+msg "killing zerostress if up [ ok ]"
+
+msg "starting zerostress as a daemon ..."
+/usr/bin/zerostress -v --dest-ip=169.254.1.1 >> /var/log/messages 2>&1 &
+msg "starting zerostress as a daemon [ ok ]"
