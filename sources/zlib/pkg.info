@@ -1,0 +1,9 @@
+export pkg_url="https://www.zlib.net/zlib-${pkg_ver}.tar.gz"
+
+#  configure [--const] [--zprefix] [--prefix=PREFIX]  [--eprefix=EXPREFIX]
+#    [--static] [--64] [--libdir=LIBDIR] [--sharedlibdir=LIBDIR]
+#    [--includedir=INCLUDEDIR] [--archs="-arch i386 -arch x86_64"]
+pkg_extra_confopts="--prefix=${DIR_ERG}/targetfs/usr -eprefix=${DIR_ERG}/targetfs/usr"
+
+export pkg_cflags="-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wold-style-definition -std=gnu99 -Wmissing-declarations -Wold-style-definition -Wformat=2"
+

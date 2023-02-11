@@ -1,7 +1,20 @@
 /bin/mount -t proc proc /proc
 /bin/mount -t sysfs sysfs /sys
-#remove dark blue
-printf %b '\e]4;4;#6495ed\a'
+
+# Needed for kexec image loading 
+/bin/mount /dev/mmcblk0p1 /boot
+/bin/mount /dev/mmcblk0p2 /mnt/logs
+
+# Preparing for kernel crashdump with kexec.
+#
+# This works with 
+# - kexec tool
+# - appropriate CONFIG_ oipitons set
+# - apprpriate commandline with crashkernel=128M
+
+BOOTARGS="maxcpus=1 earlyprintk rdinit="/bin/crashdump.sh" root=/dev/ram0"
+/usr/sbin/kexec -p /boot/uImage --append="${BOOTARGS}"
+
 cat /etc/motd
 
 # start ppp

@@ -1,8 +1,11 @@
 # package list
-# package  version
+# package version
+# NOTE: no dependecies implemented, keep pkg dep order
 
 busybox 1.34.0
 libpcap 1.10.1
 evtest 1.34
 ppp 2.4.9
 red 0.90
+kexec-tools 2.0.26
+

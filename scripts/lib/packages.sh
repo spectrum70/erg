@@ -41,19 +41,32 @@ function pkg_build_makeonly {
 
 	export CC=${erg_cross}gcc
 	export AR=${erg_cross}ar
+	export STRIP=${erg_cross}strip
 
 	# Other packages may need this
 	echo "CC=${erg_cross}gcc" >> Config
 	echo "AR=${erg_cross}ar" >> Config
+	echo "STRIP=${erg_cross}strip" >> Config
 	echo "CFLAGS+= ${build_cflags}" >> Config
 	echo "LDFLAGS+= ${build_ldlags}" >> Config
+
+	# Make install should produce make, but not always, some makefile
+	# does not have proper dependency so, better executing 2 steps.
 
 	make ARCH="${arch}" CROSS_COMPILE="${erg_cross}" CC=${erg_cross}gcc \
 		CFLAGS="${build_cflags}" LDFLAGS="${build_ldflags}" \
 		V=1 SKIP_STRIP="y" \
 		PREFIX="${DIR_ERG}/targetfs/usr" \
 		CONFIG_PREFIX="${DIR_ERG}/targetfs" \
-		${pkg_makevars} install
+		${pkg_makevars}
+
+	make ARCH="${arch}" CROSS_COMPILE="${erg_cross}" CC=${erg_cross}gcc \
+                CFLAGS="${build_cflags}" LDFLAGS="${build_ldflags}" \
+                V=1 SKIP_STRIP="y" \
+                PREFIX="${DIR_ERG}/targetfs/usr" \
+                CONFIG_PREFIX="${DIR_ERG}/targetfs" \
+                ${pkg_makevars} install
+
 }
 
 function pkg_configure_classic {
@@ -64,6 +77,7 @@ function pkg_configure_classic {
 
 	export CC=${erg_cross}gcc
 	export AR=${erg_cross}ar
+	export STRIP=${erg_cross}strip
 
 	pkg_apply_patches ${1}
 
@@ -72,21 +86,28 @@ function pkg_configure_classic {
 	LDFLAGS+=" ${build_ldflags}"
         export LDFLAGS
 
-	dbg "./configure --host=${target_host} \
-			--target=${target_host} \
-			--prefix=${DIR_ERG}/targetfs/usr \
-			--exec-prefix=${DIR_ERG}/targetfs/usr \
-			${arch_confpts} ${pkg_confopts}"
+	# Some configure are likely old, as zlib
+	# and are not respecting typical options.
 
-	./configure --host=${target_host} \
-			--target=${target_host} \
-			--prefix=${DIR_ERG}/targetfs/usr \
-			--exec-prefix=${DIR_ERG}/targetfs/usr \
-			${arch_confopts} ${pkg_confopts}
-
+	if [ "x${pkg_extra_confopts}" = "x" ]; then
+		dbg "./configure --host=${target_host} \
+				 --target=${target_host} \
+				 --prefix=${DIR_ERG}/targetfs/usr \
+				 --exec-prefix=${DIR_ERG}/targetfs/usr \
+				 ${arch_confpts} ${pkg_confopts}"
+		./configure --host=${target_host} \
+			    --target=${target_host} \
+			    --prefix=${DIR_ERG}/targetfs/usr \
+			    --exec-prefix=${DIR_ERG}/targetfs/usr \
+			    ${arch_confopts} ${pkg_confopts}
+	else
+		dbg "./configure ${pkg_extra_confopts}"
+		./configure ${pkg_extra_confopts}
+	fi
 	# Other packages may need this
 	echo "CC=${erg_cross}gcc" >> Config
 	echo "AR=${erg_cross}ar" >> Config
+	echo "STRIP=${erg_cross}strip" >> Config
 	echo "CFLAGS+= ${build_cflags}" >> Config
 	echo "LDFLAGS+= ${build_ldlags}" >> Config
 
@@ -133,6 +154,7 @@ function pkg_check_and_build {
 	unset pkg_confopts
 	unset pkg_makevars
 	unset pkg_name_override
+	unset pkg_extra_confopts
 
 	source sources/${pkg}/pkg.info
 
@@ -143,7 +165,7 @@ function pkg_check_and_build {
 		rm -rf ${pkg_dir}
 	fi
 
-	if [ "${pkg_url:0:4}" == "git@" ]; then
+	if [ "${pkg_url:0:3}" == "git" ]; then
 		if [ -e ${DIR_BUILD}/${pkg_name} ]; then
 			rm -rf ${DIR_BUILD}/${pkg_name}
 		fi
@@ -165,6 +187,9 @@ function pkg_check_and_build {
 		if [ ${pkg_name: -7} == ".tar.gz" ]; then
 			tar -zxf ${DIR_DL}/${pkg_name} --directory ${DIR_BUILD}
 		fi
+		if [ ${pkg_name: -4} == ".zip" ]; then
+                        unzip ${DIR_DL}/${pkg_name} -d ${DIR_BUILD}
+                fi
 	fi
 
 	build_cflags="${arch_cflags} ${dist_cflags} ${pkg_cflags}"
