@@ -32,6 +32,11 @@ sudo mknod -m 666 ${DIR_ERG}/targetfs/dev/urandom c 1 9
 sudo mkdir ${DIR_ERG}/targetfs/dev/input
 sudo mknod ${DIR_ERG}/targetfs/dev/input/event0 c 13 64
 sudo mknod -m 666 ${DIR_ERG}/targetfs/dev/ppp c 108 0
+sudo mknod ${DIR_ERG}/targetfs/dev/i2c-0 c 89 0
+sudo mknod ${DIR_ERG}/targetfs/dev/i2c-1 c 89 1
+sudo mknod ${DIR_ERG}/targetfs/dev/i2c-2 c 89 2
+sudo mknod ${DIR_ERG}/targetfs/dev/i2c-3 c 89 3
+sudo mknod ${DIR_ERG}/targetfs/dev/fb0 c 29 0
 
 sudo ln -s ./ram0 ${DIR_ERG}/targetfs/dev/ram
 
