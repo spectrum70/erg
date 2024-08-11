@@ -32,8 +32,8 @@ function build_checks {
 
 function usage {
 	echo "go.sh, erg build system helper v." ${go_version}
-	echo "Angelo Dureghello (C) sysam.it 2019, 2020"
-	echo "Usage: ./go.sh config [option]"
+	echo "Angelo Dureghello (C) kernel-space.org 2019-2024"
+	echo "Usage: ./go.sh config_file [single_package] [options]"
 	echo "Options: -h --help      shows this help"
 	echo "         -k --kernel    build kernel and modules"
 	echo "         -c --config    force busybox reconfig"
@@ -84,7 +84,7 @@ fi
 
 # Cleanup
 unset erg_cross
-unset erg_hostname
+unset hostname
 unset target_host
 unset arch
 unset arch_cflags
@@ -95,15 +95,27 @@ source ./version
 welcome $go_version
 echo
 
-if [ ! -e boards/${cfg} ]; then
+if [ ! -e "configs/${cfg}.conf" ]; then
 	err "board config missing, exiting."
 fi
 
-if [ ! -e ${DIR_PKG_LST}/pkgs-${cfg}.list ]; then
+if [ ! -e "${DIR_PKG_LST}/pkgs-${cfg}.list" ]; then
 	err "board package list missing, exiting."
 fi
 
-source boards/${cfg}
+# Source config file
+source configs/${cfg}.conf
+
+# Get arch specific config
+if [ "${arch}" = "" ] || [ "${cpu}" = "" ]; then
+	err "please set arch and cpu in config file"
+fi
+source arch/${arch}/${cpu}
+
+# Setup package list
+if [ ! -e ${DIR_PKG_LST}/pkgs-${cfg}.list ]; then
+	err "specific config [$cfg] is missing corresponding package list"
+fi
 list=${DIR_PKG_LST}/pkgs-${cfg}.list
 
 display_conf

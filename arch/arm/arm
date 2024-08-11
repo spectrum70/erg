@@ -1,0 +1,5 @@
+export erg_cross=/opt/toolchains/arm/gcc-arm-9.2-2019.12-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-
+
+export arch=arm
+export target_host=arm-linux
+

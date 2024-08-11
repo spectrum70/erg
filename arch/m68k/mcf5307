@@ -1,0 +1,6 @@
+# m68k flat
+export erg_cross=/opt/toolchains/m68k/m68k-sysam-uclinux-uclibc/bin/m68k-sysam-uclinux-uclibc-
+
+export arch=m68k
+export arch_cflags="-mcpu=5307,-m5307"
+export target_host=m68k-linux

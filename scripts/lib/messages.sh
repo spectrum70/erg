@@ -25,22 +25,22 @@ function welcome {
 	cat logo
 	printf "     erg v.${erg_version}\n"
 	printf "     go  v.${1}\n\n"
-	printf "Copyright (C) 2017 Angelo Dureghello - Sysam\x1b[0m"
+	printf "Copyright (C) 2017 Angelo Dureghello - kernelspace\x1b[0m"
 	echo
 }
 
 function display_conf {
-	printf "\x1b[32;1mboard: \x1b[34;1m${cfg}\n"
+	printf "\x1b[32;1mconfig: \x1b[34;1m${cfg}\n"
 	if [ "x${erg_cross}" == "x" ]; then
 		printf "\x1b[31;1mcross toolchain path not set, exiting.\n"
 		exit 1
 	fi
 	cross_name=$(basename ${erg_cross})
 	printf "\x1b[32;1mcross-toolchain: \x1b[34;1m${cross_name}\n"
-	if [ "x${erg_hostname}" == "x" ]; then
-		export erg_hostname="erg"
+	if [ "x${hostname}" == "x" ]; then
+		export hostname="erg"
 	fi
-	printf "\x1b[32;1mtarget hostname: \x1b[34;1m${erg_hostname}\n"
+	printf "\x1b[32;1mtarget hostname: \x1b[34;1m${hostname}\n"
 	printf "\x1b[32;1march: \x1b[34;1m${arch}\n"
 	printf "\x1b[32;1march_cflags: \x1b[34;1m${arch_cflags}\n"
 	printf "\x1b[32;1march_ldflags: \x1b[34;1m${arch_ldflags}\n"
