@@ -3,6 +3,8 @@
 # TODO: actually adding always libc, but may be avoided if all the system
 # is static
 
+ramfs_cmp=gzip
+
 if [ "${arch}" == "arm" ]; then
 	msg "Adding libc dynamic libs ..."
 	erg_cross_path=$(dirname "${erg_cross}")
@@ -17,6 +19,27 @@ fi
 
 if [ "x${initramfs}" == "x1" ]; then
 
+	if [ ${ramfs_cmp} == gzip ]; then
+                cmp="gzip"
+                cmp_ext=gz
+                cmp_img=gzip
+        fi
+	if [ ${ramfs_cmp} == xz ]; then
+		cmp="xz --threads=1 --check=crc32 --lzma2=dict=512KiB"
+		cmp_ext=xz
+		cmp_img=xz
+	fi
+	if [ ${ramfs_cmp} == zstd ]; then
+		cmp="zstd -T0 -22 --ultra"
+                cmp_ext=zstd
+		cmp_img=zstd
+        fi
+	if [ ${ramfs_cmp} == bzip2 ]; then
+		cmp="bzip2"
+                cmp_ext=bz2
+		cmp_img=bzip2
+        fi
+
 	msg "creating uRamdisk (on $card_dev, from ${ramfs})"
 
 	sudo rm -rf initramfs.* uRamfs ramfs
@@ -25,11 +48,15 @@ if [ "x${initramfs}" == "x1" ]; then
 	fakeroot chown -R root:root targetfs
 	cd targetfs; find . | fakeroot cpio -H newc -o > ../initramfs.cpio
 	cd ..
-	cat initramfs.cpio | fakeroot gzip > initramfs.cpio.gz
-	rm -rf initramfs.cpio
+	cat initramfs.cpio | fakeroot ${cmp} > initramfs.cpio.${cmp_ext}
+	# rm -rf initramfs.cpio
 	sync
 	msg "creating initramfs done"
-	msg "creating initramfs uRamfs ..."
-	mkimage -A arm -O linux -T ramdisk -C gzip -n 'initramfs image' -d initramfs.cpio.gz uRamfs
-	msg "creating initramfs uRamfs done"
+	if [ ${ramfs_cmp} != xz ]; then
+		msg "creating initramfs uRamfs ..."
+		mkimage -A arm -O linux -T ramdisk -C ${cmp_img} -n 'initramfs image' -d initramfs.cpio.${cmp_ext} uRamfs
+		msg "creating initramfs uRamfs done"
+	else
+		msg "xz compression, not supported by mkimage, skipping uRamfs"
+	fi
 fi
