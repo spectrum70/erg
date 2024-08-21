@@ -11,3 +11,5 @@ targetfs
 uImage
 build
 Config
+initramfs.cpio.gz
+uRamfs
