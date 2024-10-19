@@ -20,9 +20,11 @@ msg()
 	fi
 }
 
+# pwm value pause inverted
+
 pwm()
 {
-	if [ $# -gt 1 ]; then
+	if [ $# -gt 2 ]; then
 		val=$((100 - $1))
 	else
 		val=$1
@@ -31,7 +33,7 @@ pwm()
 	clear_screen
 	msg "      PWM       "
 	blank_line
-	msg "      ${1} %    " 3
+	msg "      ${1} %    " ${2}
 }
 
 change_direction()
@@ -47,6 +49,25 @@ change_direction()
 	else
 		echo 1 > /sys/class/gpio/gpio4/value
 	fi
+}
+
+small()
+{
+	pwm 0 0.2
+	pwm 10 0.5
+	pwm 20 0.5
+	pwm 50 0.5
+	pwm 70 0.5
+	pwm 100 2
+	pwm 0 1
+	change_direction
+	pwm 0 0.5 i
+	pwm 10 0.5 i
+	pwm 50 0.5 i
+	pwm 70 0.5 i
+	pwm 100 2 i
+	pwm 0 1 i
+	change_direction
 }
 
 init()
@@ -73,6 +94,9 @@ init
 while [ 1 ]; do
 	clear_screen
 	cat /root/lugts/logo.raw > /dev/fb0
+	small
+	small
+	small
 	sleep 10
 	clear_screen
 	# 16 x 4 now
@@ -80,48 +104,50 @@ while [ 1 ]; do
 	msg "      from      " 0
 	blank_line
 	msg "   LUG Trieste  " 3
+	small
 	clear_screen
 	msg "In this intro   " 1
 	msg "we present      " 1
 	msg "a small demo    " 1
 	msg "whit a cheap    " 1
-	msg "banana pi m2 0  " 1
-	msg "features:       " 1
-
-	msg "Allwinner CPU,  " 1
-	msg "sunxi H3        " 1
-	msg "sdcard, wifi    " 1
-	msg "512MDDR         " 1
-	msg "several GPIOs   " 1
+	msg "Banana PI m2 0  " 1
 	blank_line
-	msg "we prepared it  " 1
+	msg "Features:       " 1
+	msg "- Allwinner CPU " 1
+	msg "- sunxi H2+     " 1
+	msg "- sdcard, wifi  " 1
+	msg "- 512MDDR       " 1
+	msg "- several GPIOs " 1
+	blank_line
+	msg "We prepared it  " 1
 	msg "with an ad-hoc  " 1
 	msg "real-time Linux " 1
 	msg "called          " 1
-	msg " magic OS (RT)  " 1
+	msg "  * magic OS *  " 1
 	msg "with a fast boot" 1
 	msg "and with a 16MB " 1
-	msg "initramfs only  " 3
+	msg "initramfs only  " 1
+	msg "root file system" 3
 
-	pwm 0
-	pwm 10
-	pwm 20
-	pwm 30
-	pwm 50
-	pwm 70
-	pwm 100
+	pwm 0 1
+	pwm 10 1
+	pwm 20 1
+	pwm 30 1
+	pwm 50 1
+	pwm 70 1
+	pwm 100 1
 	pwm 0
 
 	change_direction
 
-	pwm 0 i
-	pwm 10 i
-	pwm 20 i
-	pwm 30 i
-	pwm 50 i
-	pwm 70 i
-	pwm 100 i
-	pwm 0 i
+	pwm 0 1 i
+	pwm 10 1 i
+	pwm 20 1 i
+	pwm 30 1 i
+	pwm 50 1 i
+	pwm 70 1 i
+	pwm 100 1 i
+	pwm 0 1 i
 
 	change_direction 0
 	pwm 0
