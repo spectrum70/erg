@@ -1,13 +1,13 @@
-Sysam - Trieste, Italy
+![alt text](resources/logo.png)
 
+# ERG - Embedded Rootfs Generator
 
-     erg - embedded rootfs generator
 
 
 Provided under the terms of the GNU General Public License v2.0 or later,
 as provided in LICENSES/GPL-2.0-or-later.
 
-Copyright (C) Sysam.it 2021 - Angelo Dureghello
+Copyright (C) KERNELSPACE 2021 - Angelo Dureghello
 
 
 
