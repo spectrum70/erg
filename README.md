@@ -3,7 +3,7 @@
 # ERG - Embedded Rootfs Generator
 
 ERG is provided under the terms of the GNU General Public License v2.0 or later,
-as provided in LICENSES/GPL-2.0-or-later.
+as provided in [LICENSE.md](LICENSE.md).
 
 Copyright (C) KERNELSPACE 2021 - Angelo Dureghello
 
